@@ -11,6 +11,11 @@ import java.util.Date;
  */
 public class Project1 {
 
+    static final String README = "\nREADME\n\nRandy Rollofson\nProject: phonebill\n\nThis program manages phone calls which " +
+            "consist of a customer name, caller phone number\n" +
+            "callee phone number, start time of a call, end time of a call, and the date that the call was made.\n" +
+            "Phone calls are then added to a phone bill belonging to a specific customer.";
+
     public static void main(String[] args) {
         if (args.length != 0 && args[0].equals("-README")) {
             displayReadme();
@@ -113,10 +118,7 @@ public class Project1 {
     }
 
     private static void displayReadme() {
-        System.out.println("\nREADME\n\nRandy Rollofson\nProject: phonebill\n\nThis program manages phone calls which " +
-                "consist of a customer name, caller phone number\n" +
-                "callee phone number, start time of a call, end time of a call, and the date that the call was made.\n" +
-                "Phone calls are then added to a phone bill belonging to a specific customer.");
+        System.out.println(README);
         System.exit(0);
     }
 }

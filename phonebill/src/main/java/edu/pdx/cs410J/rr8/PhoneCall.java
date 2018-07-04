@@ -26,12 +26,12 @@ public class PhoneCall extends AbstractPhoneCall {
 
     @Override
     public String getStartTimeString() {
-        return this.startTime;
+        return this.startDate + ' ' + this.startTime;
     }
 
     @Override
     public String getEndTimeString() {
-        return this.endTime;
+        return this.endDate + ' ' + this.endTime;
     }
 
     public String getStartDate() {
