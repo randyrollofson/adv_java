@@ -31,4 +31,4 @@ dependency-reduced-pom.xml
 target
 
 ~/adv_java/phonebill/target/**
-~/adv_java/phonebill/.idea/**
+~/adv_java/phonebill/.idea/workspace.xml
