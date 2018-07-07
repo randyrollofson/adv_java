@@ -39,13 +39,7 @@ public class Project1 {
         String endDate = parsedArgs.get(5);
         String endTime = parsedArgs.get(6);
 
-        PhoneCall call = new PhoneCall();
-        call.setCaller(callerNumber);
-        call.setCallee(calleeNumber);
-        call.setStartDate(startDate);
-        call.setStartTime(startTime);
-        call.setEndDate(endDate);
-        call.setEndTime(endTime);
+        PhoneCall call = new PhoneCall(callerNumber, calleeNumber, startTime, endTime, startDate, endDate);
 
         if (!call.isValidPhoneNumber(callerNumber)) {
             System.exit(1);

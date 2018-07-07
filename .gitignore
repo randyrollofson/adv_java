@@ -23,12 +23,11 @@
 hs_err_pid*
 
 # IntelliJ files
-.idea
+*.idea
 dependency-reduced-pom.xml
 *.iml
 
 # Maven files
 target
 
-# Emacs backup files
-*.~*~
+*/target/*

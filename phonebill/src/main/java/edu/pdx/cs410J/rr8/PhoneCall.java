@@ -7,12 +7,21 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class PhoneCall extends AbstractPhoneCall {
-    private String caller;
-    private String callee;
-    private String startTime;
-    private String endTime;
-    private String startDate;
-    private String endDate;
+    private final String caller;
+    private final String callee;
+    private final String startTime;
+    private final String endTime;
+    private final String startDate;
+    private final String endDate;
+
+    public PhoneCall(String caller, String callee, String startTime, String endTime, String startDate, String endDate) {
+        this.caller = caller;
+        this.callee = callee;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 
     @Override
     public String getCaller() {
@@ -40,30 +49,6 @@ public class PhoneCall extends AbstractPhoneCall {
 
     public String getEndDate() {
         return this.endDate;
-    }
-
-    public void setCaller(String caller) {
-        this.caller = caller;
-    }
-
-    public void setCallee(String callee) {
-        this.callee = callee;
-    }
-
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
-
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
     }
 
     public boolean isValidPhoneNumber(String phoneNumber) {

@@ -11,113 +11,109 @@ import java.util.Date;
  */
 <span class="nc" id="L12">public class Project1 {</span>
 
-    public static void main(String[] args) {
-<span class="pc bpc" id="L15" title="1 of 4 branches missed.">        if (args.length != 0 &amp;&amp; args[0].equals(&quot;-README&quot;)) {</span>
-<span class="nc" id="L16">            displayReadme();</span>
-        }
-<span class="fc" id="L18">        boolean foundOptions = false;</span>
-<span class="fc" id="L19">        List&lt;String&gt; options = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L20">        List&lt;String&gt; parsedArgs = new ArrayList&lt;&gt;();</span>
+    static final String README = &quot;\nREADME\n\nRandy Rollofson\nProject: phonebill\n\nThis program manages phone calls which &quot; +
+            &quot;consist of a customer name, caller phone number\n&quot; +
+            &quot;callee phone number, start time of a call, end time of a call, and the date that the call was made.\n&quot; +
+            &quot;Phone calls are then added to a phone bill belonging to a specific customer.&quot;;
 
-<span class="pc bpc" id="L22" title="1 of 2 branches missed.">        if (parseOptions(args, options, parsedArgs)) {</span>
-<span class="nc" id="L23">            foundOptions = true;</span>
+    public static void main(String[] args) {
+<span class="fc bfc" id="L20" title="All 4 branches covered.">        if (args.length != 0 &amp;&amp; args[0].equals(&quot;-README&quot;)) {</span>
+<span class="nc" id="L21">            displayReadme();</span>
+        }
+<span class="fc" id="L23">        boolean foundOptions = false;</span>
+<span class="fc" id="L24">        List&lt;String&gt; options = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L25">        List&lt;String&gt; parsedArgs = new ArrayList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L27" title="All 2 branches covered.">        if (parseOptions(args, options, parsedArgs)) {</span>
+<span class="fc" id="L28">            foundOptions = true;</span>
 //            if (options.get(0).equals(&quot;-README&quot;)) {
 //                displayReadme();
 //            }
         }
-<span class="fc" id="L28">        validateArgs(parsedArgs);</span>
-<span class="fc" id="L29">        String customer = parsedArgs.get(0);</span>
-<span class="fc" id="L30">        String callerNumber = parsedArgs.get(1);</span>
-<span class="fc" id="L31">        String calleeNumber = parsedArgs.get(2);</span>
-<span class="fc" id="L32">        String startDate = parsedArgs.get(3);</span>
-<span class="fc" id="L33">        String startTime = parsedArgs.get(4);</span>
-<span class="fc" id="L34">        String endDate = parsedArgs.get(5);</span>
-<span class="fc" id="L35">        String endTime = parsedArgs.get(6);</span>
+<span class="fc" id="L33">        validateArgs(parsedArgs);</span>
+<span class="fc" id="L34">        String customer = parsedArgs.get(0);</span>
+<span class="fc" id="L35">        String callerNumber = parsedArgs.get(1);</span>
+<span class="fc" id="L36">        String calleeNumber = parsedArgs.get(2);</span>
+<span class="fc" id="L37">        String startDate = parsedArgs.get(3);</span>
+<span class="fc" id="L38">        String startTime = parsedArgs.get(4);</span>
+<span class="fc" id="L39">        String endDate = parsedArgs.get(5);</span>
+<span class="fc" id="L40">        String endTime = parsedArgs.get(6);</span>
 
-<span class="fc" id="L37">        PhoneCall call = new PhoneCall();</span>
-<span class="fc" id="L38">        call.setCaller(callerNumber);</span>
-<span class="fc" id="L39">        call.setCallee(calleeNumber);</span>
-<span class="fc" id="L40">        call.setStartDate(startDate);</span>
-<span class="fc" id="L41">        call.setStartTime(startTime);</span>
-<span class="fc" id="L42">        call.setEndDate(endDate);</span>
-<span class="fc" id="L43">        call.setEndTime(endTime);</span>
+<span class="fc" id="L42">        PhoneCall call = new PhoneCall(callerNumber, calleeNumber, startTime, endTime, startDate, endDate);</span>
 
-<span class="pc bpc" id="L45" title="1 of 2 branches missed.">        if (!call.isValidPhoneNumber(callerNumber)) {</span>
-<span class="nc" id="L46">            System.exit(1);</span>
+<span class="pc bpc" id="L44" title="1 of 2 branches missed.">        if (!call.isValidPhoneNumber(callerNumber)) {</span>
+<span class="nc" id="L45">            System.exit(1);</span>
         }
-<span class="pc bpc" id="L48" title="1 of 2 branches missed.">        if (!call.isValidPhoneNumber(calleeNumber)) {</span>
-<span class="nc" id="L49">            System.exit(1);</span>
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">        if (!call.isValidPhoneNumber(calleeNumber)) {</span>
+<span class="nc" id="L48">            System.exit(1);</span>
         }
-<span class="pc bpc" id="L51" title="1 of 2 branches missed.">        if (!call.isValidDate(startDate)) {</span>
-<span class="nc" id="L52">            System.exit(1);</span>
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">        if (!call.isValidDate(startDate)) {</span>
+<span class="nc" id="L51">            System.exit(1);</span>
         }
-<span class="pc bpc" id="L54" title="1 of 2 branches missed.">        if (!call.isValidTime(startTime)) {</span>
-<span class="nc" id="L55">            System.exit(1);</span>
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">        if (!call.isValidTime(startTime)) {</span>
+<span class="nc" id="L54">            System.exit(1);</span>
         }
-<span class="pc bpc" id="L57" title="1 of 2 branches missed.">        if (!call.isValidDate(endDate)) {</span>
-<span class="nc" id="L58">            System.exit(1);</span>
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">        if (!call.isValidDate(endDate)) {</span>
+<span class="nc" id="L57">            System.exit(1);</span>
         }
-<span class="pc bpc" id="L60" title="1 of 2 branches missed.">        if (!call.isValidTime(endTime)) {</span>
-<span class="nc" id="L61">            System.exit(1);</span>
+<span class="pc bpc" id="L59" title="1 of 2 branches missed.">        if (!call.isValidTime(endTime)) {</span>
+<span class="nc" id="L60">            System.exit(1);</span>
         }
-<span class="pc bpc" id="L63" title="1 of 2 branches missed.">        if (foundOptions) {</span>
-<span class="nc" id="L64">            implementOptions(options, call);</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        if (foundOptions) {</span>
+<span class="fc" id="L63">            implementOptions(options, call);</span>
         }
 
-<span class="fc" id="L67">        PhoneBill bill = new PhoneBill(customer);</span>
-<span class="fc" id="L68">        bill.addPhoneCall(call);</span>
+<span class="fc" id="L66">        PhoneBill bill = new PhoneBill(customer);</span>
+<span class="fc" id="L67">        bill.addPhoneCall(call);</span>
 
-<span class="nc" id="L70">        System.exit(0);</span>
-<span class="nc" id="L71">    }</span>
+<span class="nc" id="L69">        System.exit(0);</span>
+<span class="nc" id="L70">    }</span>
 
     private static boolean parseOptions(String[] args, List&lt;String&gt; options, List&lt;String&gt; parsedArgs) {
-<span class="fc bfc" id="L74" title="All 2 branches covered.">        for (String arg : args) {</span>
-<span class="pc bpc" id="L75" title="1 of 2 branches missed.">            if (arg.charAt(0) == '-') {</span>
-<span class="nc" id="L76">                options.add(arg);</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">        for (String arg : args) {</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">            if (arg.charAt(0) == '-') {</span>
+<span class="fc" id="L75">                options.add(arg);</span>
             } else {
-<span class="fc" id="L78">                parsedArgs.add(arg);</span>
+<span class="fc" id="L77">                parsedArgs.add(arg);</span>
             }
         }
-<span class="pc bpc" id="L81" title="1 of 2 branches missed.">        if (options.isEmpty()) {</span>
-<span class="fc" id="L82">            return false;</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        if (options.isEmpty()) {</span>
+<span class="fc" id="L81">            return false;</span>
         }
-<span class="nc" id="L84">        return true;</span>
+<span class="fc" id="L83">        return true;</span>
     }
 
     private static void implementOptions(List&lt;String&gt; options, PhoneCall call) {
-<span class="nc bnc" id="L88" title="All 2 branches missed.">        for (String option : options) {</span>
-<span class="nc bnc" id="L89" title="All 2 branches missed.">            if (option.equals(&quot;-print&quot;)) {</span>
-<span class="nc" id="L90">                System.out.println(call.toString());</span>
-<span class="nc bnc" id="L91" title="All 2 branches missed.">            } else if (option.equals(&quot;-README&quot;)) {</span>
-<span class="nc" id="L92">                displayReadme();</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">        for (String option : options) {</span>
+<span class="pc bpc" id="L88" title="1 of 2 branches missed.">            if (option.equals(&quot;-print&quot;)) {</span>
+<span class="fc" id="L89">                System.out.println(call.toString());</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">            } else if (option.equals(&quot;-README&quot;)) {</span>
+<span class="nc" id="L91">                displayReadme();</span>
             }
-<span class="nc" id="L94">        }</span>
-<span class="nc" id="L95">    }</span>
+<span class="fc" id="L93">        }</span>
+<span class="fc" id="L94">    }</span>
 
     private static void validateArgs(List&lt;String&gt; parsedArgs) {
-<span class="fc bfc" id="L98" title="All 2 branches covered.">        if (parsedArgs.size() == 0) {</span>
-<span class="fc" id="L99">            System.err.println(&quot;Missing all command line arguments&quot;);</span>
-<span class="nc" id="L100">            System.exit(1);</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">        if (parsedArgs.size() == 0) {</span>
+<span class="fc" id="L98">            System.err.println(&quot;Missing all command line arguments&quot;);</span>
+<span class="nc" id="L99">            System.exit(1);</span>
         }
-<span class="pc bpc" id="L102" title="2 of 4 branches missed.">        if (parsedArgs.size() &gt; 1 &amp;&amp; parsedArgs.size() &lt; 7) {</span>
-<span class="nc" id="L103">            System.err.println(&quot;Missing one or more command line arguments&quot;);</span>
-<span class="nc" id="L104">            System.exit(1);</span>
+<span class="pc bpc" id="L101" title="2 of 4 branches missed.">        if (parsedArgs.size() &gt; 1 &amp;&amp; parsedArgs.size() &lt; 7) {</span>
+<span class="nc" id="L102">            System.err.println(&quot;Missing one or more command line arguments&quot;);</span>
+<span class="nc" id="L103">            System.exit(1);</span>
         }
-<span class="pc bpc" id="L106" title="1 of 2 branches missed.">        if (parsedArgs.size() &gt; 7) {</span>
-<span class="nc" id="L107">            System.err.println(&quot;Too many command line arguments&quot;);</span>
-<span class="nc" id="L108">            System.exit(1);</span>
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">        if (parsedArgs.size() &gt; 7) {</span>
+<span class="nc" id="L106">            System.err.println(&quot;Too many command line arguments&quot;);</span>
+<span class="nc" id="L107">            System.exit(1);</span>
         }
 //        for (String arg : args) {
 //            System.out.println(arg);
 //        }
-<span class="fc" id="L113">    }</span>
+<span class="fc" id="L112">    }</span>
 
     private static void displayReadme() {
-<span class="nc" id="L116">        System.out.println(&quot;\nREADME\n\nRandy Rollofson\nProject: phonebill\n\nThis program manages phone calls which &quot; +</span>
-                &quot;consist of a customer name, caller phone number\n&quot; +
-                &quot;callee phone number, start time of a call, end time of a call, and the date that the call was made.\n&quot; +
-                &quot;Phone calls are then added to a phone bill belonging to a specific customer.&quot;);
-<span class="nc" id="L120">        System.exit(0);</span>
-<span class="nc" id="L121">    }</span>
+<span class="fc" id="L115">        System.out.println(README);</span>
+<span class="nc" id="L116">        System.exit(0);</span>
+<span class="nc" id="L117">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>
