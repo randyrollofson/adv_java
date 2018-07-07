@@ -6,51 +6,80 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Class for managing phone calls
+ */
 public class PhoneCall extends AbstractPhoneCall {
     private final String caller;
     private final String callee;
     private final String startTime;
     private final String endTime;
-    private final String startDate;
-    private final String endDate;
 
+    /**
+     * Creates a new <code>PhoneCall</code>
+     *
+     * @param caller
+     *        The phone number of the caller
+     * @param callee
+     *        The phone number of the callee
+     * @param startTime
+     *        The time that the call began (24-hour time)
+     * @param endTime
+     *        The time that the call began (24-hour time)
+     * @param startDate
+     *        The date that the call began
+     * @param endDate
+     *        The date that the call ended
+     */
     public PhoneCall(String caller, String callee, String startTime, String endTime, String startDate, String endDate) {
         this.caller = caller;
         this.callee = callee;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.startTime = startDate + ' ' + startTime;
+        this.endTime = endDate + ' ' + endTime;
     }
 
+    /**
+     * Returns the phone number of the person who originated this phone call
+     * @return The phone number of the caller
+     */
     @Override
     public String getCaller() {
         return this.caller;
     }
 
+    /**
+     * Returns the phone number of the person who received this phone call.
+     * @return The phone number of the callee
+     */
     @Override
     public String getCallee() {
         return this.callee;
     }
 
+    /**
+     * Returns the date and time that this phone call was originated
+     * @return The date and time that the call began (24-hour time)
+     */
     @Override
     public String getStartTimeString() {
-        return this.startDate + ' ' + this.startTime;
+        return this.startTime;
     }
 
+    /**
+     * Returns the date and time that this phone call ended
+     * @return The date and time that the call ended (24-hour time)
+     */
     @Override
     public String getEndTimeString() {
-        return this.endDate + ' ' + this.endTime;
+        return this.endTime;
     }
 
-    public String getStartDate() {
-        return this.startDate;
-    }
-
-    public String getEndDate() {
-        return this.endDate;
-    }
-
+    /**
+     * Returns whether or not a phone number has the correct format
+     * @param phoneNumber
+     *        The phone number to be validated
+     * @return True/false based on validation
+     */
     public boolean isValidPhoneNumber(String phoneNumber) {
         //Check for standard format
         if (phoneNumber.length() != 12 || phoneNumber.charAt(3) != '-' || phoneNumber.charAt(7) != '-') {
@@ -69,6 +98,12 @@ public class PhoneCall extends AbstractPhoneCall {
         return true;
     }
 
+    /**
+     * Returns whether or not a data the correct format
+     * @param date
+     *        The data (as String) to be validated
+     * @return True/false based on validation
+     */
     public boolean isValidDate(String date) {
         try {
             SimpleDateFormat formatter1 = new SimpleDateFormat("MM/dd/yyyy");
@@ -93,6 +128,12 @@ public class PhoneCall extends AbstractPhoneCall {
         return true;
     }
 
+    /**
+     *
+     * @param time
+     *        The time (as String) to be validated
+     * @return True/false based on validation
+     */
     public boolean isValidTime(String time) {
         try {
             SimpleDateFormat formatter1 = new SimpleDateFormat("kk:mm");
@@ -110,6 +151,4 @@ public class PhoneCall extends AbstractPhoneCall {
 
         return true;
     }
-
-
 }
