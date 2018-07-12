@@ -134,7 +134,7 @@ public class PhoneCall extends AbstractPhoneCall {
      *        The time (as String) to be validated
      * @return True/false based on validation
      */
-    public boolean isValidTime(String time) {
+    public boolean isValidTime(String time) { //TODO dateformatter.short?
         try {
             SimpleDateFormat formatter1 = new SimpleDateFormat("kk:mm");
             SimpleDateFormat formatter2 = new SimpleDateFormat("k:mm");
