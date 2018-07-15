@@ -44,7 +44,7 @@ public class Project1IT extends InvokeMainTestCase {
     public void dashReadmeOptionPrintsOnlyReadme() {
         MainMethodResult result = invokeMain("-README");
         assertThat(result.getExitCode(), equalTo(0));
-        assertThat(result.getTextWrittenToStandardOut(), equalTo(Project1.README + "\n"));
+        assertThat(result.getTextWrittenToStandardOut(), equalTo(Project2.README + "\n"));
         assertThat(result.getTextWrittenToStandardError(), equalTo(""));
     }
 

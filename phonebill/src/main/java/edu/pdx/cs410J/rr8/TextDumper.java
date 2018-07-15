@@ -12,10 +12,11 @@ public class TextDumper implements PhoneBillDumper {
     private String filePath;
     private String fileName;
 
-    public TextDumper(String filePath, String fileName) {
+    TextDumper(String filePath, String fileName) {
         this.filePath = filePath;
         this.fileName = fileName;
     }
+
     @Override
     public void dump(AbstractPhoneBill bill) throws IOException {
         FileWriter fileWriter = new FileWriter(filePath + fileName);

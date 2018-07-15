@@ -10,11 +10,14 @@ import java.util.List;
  * The main class for the CS410J Phone Bill Project
  */
 public class Project2 {
-    static private final String README = "\nREADME\n\nRandy Rollofson\nProject: phonebill\n\nThis program manages phone calls which " +
+    static final String README = "\nREADME\n\nRandy Rollofson\nProject: phonebill\n\nThis program manages phone calls which " +
             "consist of a customer name, caller phone number\n" +
             "callee phone number, start time of a call, end time of a call, and the date that the call was made.\n" +
-            "Phone calls are added to a phone bill belonging to a specific customer.";
-            //TODO Update
+            "Phone calls are added to a phone bill that is read in from a text file.\n\n" +
+            "If the bill is not found at the specified file path, a new bill will be created and added to.\n" +
+            "If the file exists, the phone call information provided via the command line\n" +
+            "will be appended to the existing phone bill.";
+
     static private String FILE_NAME = null;
 
     /**
@@ -25,7 +28,6 @@ public class Project2 {
     public static void main(String[] args) throws ParserException, IOException {
         String filePath = "src/main/java/edu/pdx/cs410J/rr8/";
         TextParser textParser = null;
-        //PhoneBill bill = null;
         if (args.length != 0 && args[0].equals("-README")) {
             displayReadme();
         }
@@ -34,19 +36,13 @@ public class Project2 {
         List<String> parsedArgs = new ArrayList<>();
 
         if (isTextFileOption(args)) {
-            //System.out.println("textFile found!");
-            //System.out.println(FILE_NAME);
             textParser = new TextParser(FILE_NAME, filePath);
             textParser.parse();
-            // Validate calls found in phone bill (if any)
-
         }
 
         if (parseOptions(args, options, parsedArgs)) {
             foundOptions = true;
         }
-        //System.out.println("options:" + options);
-        //System.out.println("parsed args: " + parsedArgs);
         validateArgs(parsedArgs);
         String customer = parsedArgs.get(0);
         if (textParser != null) {
@@ -90,20 +86,12 @@ public class Project2 {
         if (textParser == null) {
             PhoneBill bill = new PhoneBill(customer);
             bill.addPhoneCall(call);
-//            System.out.println(bill.toString());
-//            for (PhoneCall phoneCall : bill.getPhoneCalls()) {
-//                System.out.println(phoneCall.toString());
-//            }
         } else {
             PhoneBill bill = textParser.getPhoneBill();
             if (bill == null) {
                 bill = new PhoneBill(customer);
             }
             bill.addPhoneCall(call);
-            System.out.println(bill.toString());
-            for (PhoneCall phoneCall : bill.getPhoneCalls()) {
-                System.out.println(phoneCall.toString());
-            }
             TextDumper textDumper = new TextDumper(filePath, textParser.getFileName());
             textDumper.dump(bill);
         }
@@ -122,13 +110,6 @@ public class Project2 {
      * @return True/false based on whether or not any options are found
      */
     private static boolean parseOptions(String[] args, List<String> options, List<String> parsedArgs) {
-//        for (String arg : args) {
-//            if (arg.charAt(0) == '-' && !arg.equals("-textFile")) {
-//                options.add(arg);
-//            } else if (){
-//                parsedArgs.add(arg);
-//            }
-//        }
         for (int i = 0; i < args.length; i++) {
             if (args[i].charAt(0) == '-' && !args[i].equals("-textFile")) {
                 options.add(args[i]);
@@ -190,7 +171,6 @@ public class Project2 {
     }
 
     private static boolean isTextFileOption(String[] args) {
-        //for (String arg : args) {
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("-textFile")) {
                 FILE_NAME = args[i + 1];

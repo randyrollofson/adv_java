@@ -31,7 +31,7 @@ public class PhoneCall extends AbstractPhoneCall {
      * @param endDate
      *        The date that the call ended
      */
-    public PhoneCall(String caller, String callee, String startDate, String startTime, String endDate, String endTime) {
+    PhoneCall(String caller, String callee, String startDate, String startTime, String endDate, String endTime) {
         this.caller = caller;
         this.callee = callee;
         this.startTimeString = startDate + ' ' + startTime;
@@ -80,7 +80,7 @@ public class PhoneCall extends AbstractPhoneCall {
      *        The phone number to be validated
      * @return True/false based on validation
      */
-    public boolean isValidPhoneNumber(String phoneNumber) {
+    boolean isValidPhoneNumber(String phoneNumber) {
         //Check for standard format
         if (phoneNumber.length() != 12 || phoneNumber.charAt(3) != '-' || phoneNumber.charAt(7) != '-') {
             System.err.println("Incorrect phone number format. Must be xxx-xxx-xxxx");
@@ -104,7 +104,7 @@ public class PhoneCall extends AbstractPhoneCall {
      *        The data (as String) to be validated
      * @return True/false based on validation
      */
-    public boolean isValidDate(String date) {
+    boolean isValidDate(String date) {
         try {
             SimpleDateFormat formatter1 = new SimpleDateFormat("MM/dd/yyyy");
             SimpleDateFormat formatter2 = new SimpleDateFormat("M/dd/yyyy");
@@ -134,7 +134,7 @@ public class PhoneCall extends AbstractPhoneCall {
      *        The time (as String) to be validated
      * @return True/false based on validation
      */
-    public boolean isValidTime(String time) { //TODO dateformatter.short?
+    boolean isValidTime(String time) {
         try {
             SimpleDateFormat formatter1 = new SimpleDateFormat("kk:mm");
             SimpleDateFormat formatter2 = new SimpleDateFormat("k:mm");

@@ -4,9 +4,7 @@ import edu.pdx.cs410J.AbstractPhoneBill;
 import edu.pdx.cs410J.ParserException;
 import edu.pdx.cs410J.PhoneBillParser;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Arrays;
 import java.lang.String;
 
 
@@ -17,19 +15,18 @@ public class TextParser implements PhoneBillParser {
     private String filePath;
     private PhoneBill phoneBill;
 
-    public TextParser(String fileName, String filePath) {
+    TextParser(String fileName, String filePath) {
         this.fileName = fileName;
         this.filePath = filePath;
     }
 
     @Override
     public AbstractPhoneBill parse() throws ParserException {
-        //String customerName;
         List<String> lines = new ArrayList<>();
 
         try {
             File file = new File(filePath + fileName);
-            BufferedReader bufferedReader = null;
+            BufferedReader bufferedReader;
 
             try {
                 bufferedReader = new BufferedReader(new FileReader(file));
@@ -42,7 +39,6 @@ public class TextParser implements PhoneBillParser {
             while ((readLine = bufferedReader.readLine()) != null) {
                 lines.add(readLine);
             }
-            System.out.println("Lines:" + lines);
             phoneBill = new PhoneBill(lines.get(0));
 
             for (int i = 1; i < lines.size(); i++) {
@@ -52,24 +48,20 @@ public class TextParser implements PhoneBillParser {
                     System.err.println("Error: Text file is malformatted");
                     System.exit(1);
                 }
-
                 phoneBill.addPhoneCall(call);
             }
-
-            //System.out.println(phoneBill.toString());
-
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ParserException("Error: Problem with reading from text file");
         }
 
         return null;
     }
 
-    public PhoneBill getPhoneBill() {
+    PhoneBill getPhoneBill() {
         return phoneBill;
     }
 
-    public String getFileName() {
+    String getFileName() {
         return fileName;
     }
 }

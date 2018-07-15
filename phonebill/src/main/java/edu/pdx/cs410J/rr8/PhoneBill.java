@@ -18,7 +18,7 @@ public class PhoneBill extends AbstractPhoneBill<PhoneCall> {
      * @param customerName
      *        The name of the customer that the phone bill belongs to
      */
-    public PhoneBill(String customerName) {
+    PhoneBill(String customerName) {
         this.customerName = customerName;
     }
 
