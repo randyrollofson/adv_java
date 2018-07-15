@@ -14,6 +14,7 @@ public class Project2 {
             "consist of a customer name, caller phone number\n" +
             "callee phone number, start time of a call, end time of a call, and the date that the call was made.\n" +
             "Phone calls are added to a phone bill belonging to a specific customer.";
+            //TODO Update
     static private String FILE_NAME = null;
 
     /**
@@ -37,6 +38,8 @@ public class Project2 {
             //System.out.println(FILE_NAME);
             textParser = new TextParser(FILE_NAME, filePath);
             textParser.parse();
+            // Validate calls found in phone bill (if any)
+
         }
 
         if (parseOptions(args, options, parsedArgs)) {
@@ -47,7 +50,7 @@ public class Project2 {
         validateArgs(parsedArgs);
         String customer = parsedArgs.get(0);
         if (textParser != null) {
-            if (!customer.equals(textParser.getPhoneBill().getCustomer())) {
+            if (textParser.getPhoneBill() != null && !customer.equals(textParser.getPhoneBill().getCustomer())) {
                 System.err.println("Error: Customer name to add does not match customer name on phone bill");
                 System.exit(1);
             }

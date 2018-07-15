@@ -48,6 +48,11 @@ public class TextParser implements PhoneBillParser {
             for (int i = 1; i < lines.size(); i++) {
                 String[] args = lines.get(i).split(" ");
                 PhoneCall call = new PhoneCall(args[0], args[1], args[2], args[3], args[4], args[5]);
+                if (!call.isValidPhoneNumber(args[0]) || !call.isValidPhoneNumber(args[1]) || !call.isValidDate(args[2]) || !call.isValidTime(args[3]) || !call.isValidDate(args[4]) || !call.isValidTime(args[5])) {
+                    System.err.println("Error: Text file is malformatted");
+                    System.exit(1);
+                }
+
                 phoneBill.addPhoneCall(call);
             }
 
