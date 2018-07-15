@@ -15,7 +15,7 @@ import java.io.*;
 public class TextParser implements PhoneBillParser {
     private String fileName;
     private String filePath;
-    public PhoneBill phoneBill;
+    private PhoneBill phoneBill;
 
     public TextParser(String fileName, String filePath) {
         this.fileName = fileName;
@@ -34,8 +34,8 @@ public class TextParser implements PhoneBillParser {
             try {
                 bufferedReader = new BufferedReader(new FileReader(file));
             } catch (FileNotFoundException e) {
-                System.err.println("File not found!");
-                System.exit(1);
+                System.out.println("File not found. Creating new file at path: " + filePath + fileName);
+                return null;
             }
             String readLine;
 

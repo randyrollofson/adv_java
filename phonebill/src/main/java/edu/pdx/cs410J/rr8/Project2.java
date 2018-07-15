@@ -10,12 +10,11 @@ import java.util.List;
  * The main class for the CS410J Phone Bill Project
  */
 public class Project2 {
-    static final String README = "\nREADME\n\nRandy Rollofson\nProject: phonebill\n\nThis program manages phone calls which " +
+    static private final String README = "\nREADME\n\nRandy Rollofson\nProject: phonebill\n\nThis program manages phone calls which " +
             "consist of a customer name, caller phone number\n" +
             "callee phone number, start time of a call, end time of a call, and the date that the call was made.\n" +
             "Phone calls are added to a phone bill belonging to a specific customer.";
-    static String FILE_NAME = null;
-    static String FILE_PATH = "src/main/java/edu/pdx/cs410J/rr8/";
+    static private String FILE_NAME = null;
 
     /**
      * Main method that reads in command line args
@@ -23,7 +22,9 @@ public class Project2 {
      *        Array of command line arguments
      */
     public static void main(String[] args) throws ParserException, IOException {
+        String filePath = "src/main/java/edu/pdx/cs410J/rr8/";
         TextParser textParser = null;
+        //PhoneBill bill = null;
         if (args.length != 0 && args[0].equals("-README")) {
             displayReadme();
         }
@@ -32,9 +33,9 @@ public class Project2 {
         List<String> parsedArgs = new ArrayList<>();
 
         if (isTextFileOption(args)) {
-            System.out.println("textFile found!");
-            System.out.println(FILE_NAME);
-            textParser = new TextParser(FILE_NAME, FILE_PATH);
+            //System.out.println("textFile found!");
+            //System.out.println(FILE_NAME);
+            textParser = new TextParser(FILE_NAME, filePath);
             textParser.parse();
         }
 
@@ -45,6 +46,13 @@ public class Project2 {
         //System.out.println("parsed args: " + parsedArgs);
         validateArgs(parsedArgs);
         String customer = parsedArgs.get(0);
+        if (textParser != null) {
+            if (!customer.equals(textParser.getPhoneBill().getCustomer())) {
+                System.err.println("Error: Customer name to add does not match customer name on phone bill");
+                System.exit(1);
+            }
+        }
+
         String callerNumber = parsedArgs.get(1);
         String calleeNumber = parsedArgs.get(2);
         String startDate = parsedArgs.get(3);
@@ -76,22 +84,27 @@ public class Project2 {
             implementOptions(options, call);
         }
 
-        if (FILE_NAME == null) {
+        if (textParser == null) {
             PhoneBill bill = new PhoneBill(customer);
             bill.addPhoneCall(call);
-        }
-
-        if (textParser != null) {
+//            System.out.println(bill.toString());
+//            for (PhoneCall phoneCall : bill.getPhoneCalls()) {
+//                System.out.println(phoneCall.toString());
+//            }
+        } else {
             PhoneBill bill = textParser.getPhoneBill();
+            if (bill == null) {
+                bill = new PhoneBill(customer);
+            }
             bill.addPhoneCall(call);
             System.out.println(bill.toString());
             for (PhoneCall phoneCall : bill.getPhoneCalls()) {
                 System.out.println(phoneCall.toString());
             }
-            TextDumper textDumper = new TextDumper(FILE_PATH, textParser.getFileName());
+            TextDumper textDumper = new TextDumper(filePath, textParser.getFileName());
             textDumper.dump(bill);
         }
-        
+
         System.exit(0);
     }
 
