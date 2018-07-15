@@ -2,6 +2,7 @@ package edu.pdx.cs410J.rr8;
 
 import edu.pdx.cs410J.ParserException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,13 +15,14 @@ public class Project2 {
             "callee phone number, start time of a call, end time of a call, and the date that the call was made.\n" +
             "Phone calls are added to a phone bill belonging to a specific customer.";
     static String FILE_NAME = null;
+    static String FILE_PATH = "src/main/java/edu/pdx/cs410J/rr8/";
 
     /**
      * Main method that reads in command line args
      * @param args
      *        Array of command line arguments
      */
-    public static void main(String[] args) throws ParserException {
+    public static void main(String[] args) throws ParserException, IOException {
         TextParser textParser = null;
         if (args.length != 0 && args[0].equals("-README")) {
             displayReadme();
@@ -32,15 +34,15 @@ public class Project2 {
         if (isTextFileOption(args)) {
             System.out.println("textFile found!");
             System.out.println(FILE_NAME);
-            textParser = new TextParser(FILE_NAME);
+            textParser = new TextParser(FILE_NAME, FILE_PATH);
             textParser.parse();
         }
 
         if (parseOptions(args, options, parsedArgs)) {
             foundOptions = true;
         }
-        System.out.println("options:" + options);
-        System.out.println("parsed args: " + parsedArgs);
+        //System.out.println("options:" + options);
+        //System.out.println("parsed args: " + parsedArgs);
         validateArgs(parsedArgs);
         String customer = parsedArgs.get(0);
         String callerNumber = parsedArgs.get(1);
@@ -50,7 +52,7 @@ public class Project2 {
         String endDate = parsedArgs.get(5);
         String endTime = parsedArgs.get(6);
 
-        PhoneCall call = new PhoneCall(callerNumber, calleeNumber, startTime, endTime, startDate, endDate);
+        PhoneCall call = new PhoneCall(callerNumber, calleeNumber, startDate, startTime, endDate, endTime);
 
         if (!call.isValidPhoneNumber(callerNumber)) {
             System.exit(1);
@@ -74,6 +76,11 @@ public class Project2 {
             implementOptions(options, call);
         }
 
+        if (FILE_NAME == null) {
+            PhoneBill bill = new PhoneBill(customer);
+            bill.addPhoneCall(call);
+        }
+
         if (textParser != null) {
             PhoneBill bill = textParser.getPhoneBill();
             bill.addPhoneCall(call);
@@ -81,10 +88,10 @@ public class Project2 {
             for (PhoneCall phoneCall : bill.getPhoneCalls()) {
                 System.out.println(phoneCall.toString());
             }
-
+            TextDumper textDumper = new TextDumper(FILE_PATH, textParser.getFileName());
+            textDumper.dump(bill);
         }
-
-
+        
         System.exit(0);
     }
 
@@ -109,7 +116,7 @@ public class Project2 {
         for (int i = 0; i < args.length; i++) {
             if (args[i].charAt(0) == '-' && !args[i].equals("-textFile")) {
                 options.add(args[i]);
-            } else if (args[i].equals("-textFile")){
+            } else if (args[i].equals("-textFile")) {
                 i++;
             } else {
                 parsedArgs.add(args[i]);

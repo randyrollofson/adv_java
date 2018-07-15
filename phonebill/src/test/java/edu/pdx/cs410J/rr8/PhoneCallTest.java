@@ -30,25 +30,25 @@ public class PhoneCallTest {
 
     @Test
     public void testGetCaller() {
-        PhoneCall call = new PhoneCall("971-506-3627", "503-869-8007", "1:59", "9:15", "11/1/2018", "1/15/2018");
+        PhoneCall call = new PhoneCall("971-506-3627", "503-869-8007", "11/1/2018", "1:59", "11/15/2018", "9:15");
         assertThat(call.getCaller(), containsString("971-506-3627"));
     }
 
     @Test
     public void testGetCallee() {
-        PhoneCall call = new PhoneCall("971-506-3627", "503-869-8007", "1:59", "9:15", "11/1/2018", "1/15/2018");
+        PhoneCall call = new PhoneCall("971-506-3627", "503-869-8007", "11/1/2018", "1:59", "11/15/2018", "9:15");
         assertThat(call.getCallee(), containsString("503-869-8007"));
     }
 
     @Test
     public void testGetStartTimeString() {
-        PhoneCall call = new PhoneCall("971-506-3627", "503-869-8007", "1:59", "9:15", "11/1/2018", "1/15/2018");
+        PhoneCall call = new PhoneCall("971-506-3627", "503-869-8007", "11/1/2018", "1:59", "11/15/2018", "9:15");
         assertThat(call.getStartTimeString(), containsString("11/1/2018 1:59"));
     }
 
     @Test
     public void testGetEndTimeString() {
-        PhoneCall call = new PhoneCall("971-506-3627", "503-869-8007", "1:59", "9:15", "11/1/2018", "1/15/2018");
+        PhoneCall call = new PhoneCall("971-506-3627", "503-869-8007", "11/1/2018", "1:59", "11/15/2018", "9:15");
         assertThat(call.getEndTimeString(), containsString("1/15/2018 9:15"));
     }
   

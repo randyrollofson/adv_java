@@ -14,10 +14,12 @@ import java.io.*;
 
 public class TextParser implements PhoneBillParser {
     private String fileName;
+    private String filePath;
     public PhoneBill phoneBill;
 
-    public TextParser(String fileName) {
+    public TextParser(String fileName, String filePath) {
         this.fileName = fileName;
+        this.filePath = filePath;
     }
 
     @Override
@@ -26,7 +28,7 @@ public class TextParser implements PhoneBillParser {
         List<String> lines = new ArrayList<>();
 
         try {
-            File file = new File("src/main/java/edu/pdx/cs410J/rr8/" + fileName);
+            File file = new File(filePath + fileName);
             BufferedReader bufferedReader = null;
 
             try {
@@ -60,5 +62,9 @@ public class TextParser implements PhoneBillParser {
 
     public PhoneBill getPhoneBill() {
         return phoneBill;
+    }
+
+    public String getFileName() {
+        return fileName;
     }
 }

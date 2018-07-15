@@ -12,8 +12,8 @@ import java.util.Date;
 public class PhoneCall extends AbstractPhoneCall {
     private final String caller;
     private final String callee;
-    private final String startTime;
-    private final String endTime;
+    private final String startTimeString;
+    private final String endTimeString;
 
     /**
      * Creates a new <code>PhoneCall</code>
@@ -31,11 +31,11 @@ public class PhoneCall extends AbstractPhoneCall {
      * @param endDate
      *        The date that the call ended
      */
-    public PhoneCall(String caller, String callee, String startTime, String endTime, String startDate, String endDate) {
+    public PhoneCall(String caller, String callee, String startDate, String startTime, String endDate, String endTime) {
         this.caller = caller;
         this.callee = callee;
-        this.startTime = startDate + ' ' + startTime;
-        this.endTime = endDate + ' ' + endTime;
+        this.startTimeString = startDate + ' ' + startTime;
+        this.endTimeString = endDate + ' ' + endTime;
     }
 
     /**
@@ -62,7 +62,7 @@ public class PhoneCall extends AbstractPhoneCall {
      */
     @Override
     public String getStartTimeString() {
-        return this.startTime;
+        return this.startTimeString;
     }
 
     /**
@@ -71,7 +71,7 @@ public class PhoneCall extends AbstractPhoneCall {
      */
     @Override
     public String getEndTimeString() {
-        return this.endTime;
+        return this.endTimeString;
     }
 
     /**
