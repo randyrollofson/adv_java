@@ -1,7 +1,6 @@
 package edu.pdx.cs410J.rr8;
 
 import edu.pdx.cs410J.ParserException;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +23,15 @@ public class Project2 {
      * Main method that reads in command line args
      * @param args
      *        Array of command line arguments
+     * @throws ParserException
+     *         The parse method in TextParser throws this exception if there is a problem parsing the text file
+     * @throws IOException
+     *         The dump method in TextDumper throws this exception if there is a problem with writing to a text file
      */
     public static void main(String[] args) throws ParserException, IOException {
         String filePath = "src/main/java/edu/pdx/cs410J/rr8/";
         TextParser textParser = null;
+        PhoneBill bill = null;
         if (args.length != 0 && args[0].equals("-README")) {
             displayReadme();
         }
@@ -37,7 +41,7 @@ public class Project2 {
 
         if (isTextFileOption(args)) {
             textParser = new TextParser(FILE_NAME, filePath);
-            textParser.parse();
+            bill = textParser.parse();
         }
 
         if (parseOptions(args, options, parsedArgs)) {
@@ -46,8 +50,12 @@ public class Project2 {
         validateArgs(parsedArgs);
         String customer = parsedArgs.get(0);
         if (textParser != null) {
-            if (textParser.getPhoneBill() != null && !customer.equals(textParser.getPhoneBill().getCustomer())) {
-                System.err.println("Error: Customer name to add does not match customer name on phone bill");
+            if (bill != null && !customer.equals(bill.getCustomer())) {
+                if (bill.getCustomer().isEmpty()) {
+                    System.err.println("Error: Customer name not found on phone bill");
+                } else {
+                    System.err.println("Error: Customer name to add does not match customer name on phone bill");
+                }
                 System.exit(1);
             }
         }
@@ -83,15 +91,11 @@ public class Project2 {
             implementOptions(options, call);
         }
 
-        if (textParser == null) {
-            PhoneBill bill = new PhoneBill(customer);
+        if (bill == null) {
+            bill = new PhoneBill(customer);
+        }
             bill.addPhoneCall(call);
-        } else {
-            PhoneBill bill = textParser.getPhoneBill();
-            if (bill == null) {
-                bill = new PhoneBill(customer);
-            }
-            bill.addPhoneCall(call);
+        if (textParser != null) {
             TextDumper textDumper = new TextDumper(filePath, textParser.getFileName());
             textDumper.dump(bill);
         }
@@ -111,10 +115,15 @@ public class Project2 {
      */
     private static boolean parseOptions(String[] args, List<String> options, List<String> parsedArgs) {
         for (int i = 0; i < args.length; i++) {
-            if (args[i].charAt(0) == '-' && !args[i].equals("-textFile")) {
-                options.add(args[i]);
-            } else if (args[i].equals("-textFile")) {
-                i++;
+            if (args[i].charAt(0) == '-') {
+                if (!args[i].equals("-print") && !args[i].equals("-README") && !args[i].equals("-textFile")) {
+                    System.err.println("Error: Incorrect command line option");
+                    System.exit(1);
+                } else if (!args[i].equals("-textFile") && (args[i].equals("-print") || args[i].equals("-README"))) {
+                    options.add(args[i]);
+                } else if (args[i].equals("-textFile")) {
+                    i++;
+                }
             } else {
                 parsedArgs.add(args[i]);
             }
@@ -170,10 +179,21 @@ public class Project2 {
         System.exit(0);
     }
 
+    /**
+     * Handles setting the file name if the textFile option is in the command line arguments
+     * @param args
+     *        Array of command line arguments
+     * @return True/false whether or not the "-textFile" option is found the command line arguments
+     */
     private static boolean isTextFileOption(String[] args) {
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("-textFile")) {
-                FILE_NAME = args[i + 1];
+                if (!args[i + 1].contains(".txt")) {
+                    System.err.println("Error: Incorrect text file");
+                    System.exit(1);
+                } else {
+                    FILE_NAME = args[i + 1];
+                }
                 return true;
             }
         }
