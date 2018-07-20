@@ -11,18 +11,16 @@ import java.io.IOException;
  * Class that manages writing phone bill information to a text file
  */
 public class TextDumper implements PhoneBillDumper {
-    private String filePath;
     private String fileName;
 
     /**
      * Creates new <code>TextDumper</code>
-     * @param filePath
-     *        The relative path of the text file (not including the file name)
+//     * @param filePath
+//     *        The relative path of the text file (not including the file name)
      * @param fileName
      *        The name of the text file
      */
-    TextDumper(String filePath, String fileName) {
-        this.filePath = filePath;
+    TextDumper(String fileName) {
         this.fileName = fileName;
     }
 
@@ -35,13 +33,14 @@ public class TextDumper implements PhoneBillDumper {
      */
     @Override
     public void dump(AbstractPhoneBill bill) throws IOException {
-        FileWriter fileWriter;
-        BufferedWriter bufferedWriter;
+        FileWriter fileWriter = null;
+        BufferedWriter bufferedWriter = null;
         try {
-            fileWriter = new FileWriter(filePath + fileName);
+            fileWriter = new FileWriter(fileName);
             bufferedWriter = new BufferedWriter(fileWriter);
         } catch (IOException e) {
-            throw new IOException("Error with writing file");
+            System.err.println("Error: Problem when writing to file");
+            System.exit(1);
         }
         Collection<PhoneCall> calls = bill.getPhoneCalls();
         bufferedWriter.write(bill.getCustomer());

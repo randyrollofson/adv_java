@@ -12,18 +12,14 @@ import java.io.*;
  */
 public class TextParser implements PhoneBillParser<PhoneBill> {
     private String fileName;
-    private String filePath;
 
     /**
      * Creates a new <code>TextParser</code>
      * @param fileName
      *        Name of the text file
-     * @param filePath
-     *        Relative path of the text file (not including the file name)
      */
-    TextParser(String fileName, String filePath) {
+    TextParser(String fileName) {
         this.fileName = fileName;
-        this.filePath = filePath;
     }
 
     /**
@@ -38,13 +34,13 @@ public class TextParser implements PhoneBillParser<PhoneBill> {
         List<String> lines = new ArrayList<>();
 
         try {
-            File file = new File(filePath + fileName);
+            File file = new File(fileName);
             BufferedReader bufferedReader;
 
             try {
                 bufferedReader = new BufferedReader(new FileReader(file));
             } catch (FileNotFoundException e) {
-                System.out.println("File not found. Creating new file at path: " + filePath + fileName);
+                System.out.println("File not found");
                 return null;
             }
             String readLine;
@@ -56,6 +52,10 @@ public class TextParser implements PhoneBillParser<PhoneBill> {
                 phoneBill = new PhoneBill(lines.get(0));
                 for (int i = 1; i < lines.size(); i++) {
                     String[] args = lines.get(i).split(" ");
+                    if (args.length != 6) {
+                        System.err.println("Error: Malformatted Phone Bill");
+                        System.exit(1);
+                    }
                     PhoneCall call = new PhoneCall(args[0], args[1], args[2], args[3], args[4], args[5]);
                     if (!call.isValidPhoneNumber(args[0]) || !call.isValidPhoneNumber(args[1]) || !call.isValidDate(args[2]) || !call.isValidTime(args[3]) || !call.isValidDate(args[4]) || !call.isValidTime(args[5])) {
                         System.err.println("Error: Text file is malformatted");
@@ -65,7 +65,8 @@ public class TextParser implements PhoneBillParser<PhoneBill> {
                 }
             }
         } catch (IOException e) {
-            throw new ParserException("Error: Problem with reading from text file");
+            System.err.println("Error: Problem with reading from text file");
+            System.exit(1);
         }
 
         return phoneBill;

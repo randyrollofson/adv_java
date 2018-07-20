@@ -116,7 +116,7 @@ public class PhoneCall extends AbstractPhoneCall {
 
             if (!formatter1.format(date1).equals(date) && !formatter2.format(date2).equals(date) &&
                     !formatter3.format(date3).equals(date) && !formatter4.format(date4).equals(date)) {
-                System.err.println("Incorrect data format");
+                System.err.println("Incorrect date format");
 
                 return false;
             }
@@ -146,6 +146,7 @@ public class PhoneCall extends AbstractPhoneCall {
             }
         } catch (ParseException e){
             System.err.println("Time parsing error");
+            return false;
         }
 
         return true;

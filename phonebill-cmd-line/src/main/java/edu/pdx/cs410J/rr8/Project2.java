@@ -29,7 +29,7 @@ public class Project2 {
      *         The dump method in TextDumper throws this exception if there is a problem with writing to a text file
      */
     public static void main(String[] args) throws ParserException, IOException {
-        String filePath = "src/main/java/edu/pdx/cs410J/rr8/";
+        //String filePath = "src/main/java/edu/pdx/cs410J/rr8";
         TextParser textParser = null;
         PhoneBill bill = null;
         if (args.length != 0 && args[0].equals("-README")) {
@@ -40,7 +40,7 @@ public class Project2 {
         List<String> parsedArgs = new ArrayList<>();
 
         if (isTextFileOption(args)) {
-            textParser = new TextParser(FILE_NAME, filePath);
+            textParser = new TextParser(FILE_NAME);
             bill = textParser.parse();
         }
 
@@ -96,7 +96,7 @@ public class Project2 {
         }
             bill.addPhoneCall(call);
         if (textParser != null) {
-            TextDumper textDumper = new TextDumper(filePath, textParser.getFileName());
+            TextDumper textDumper = new TextDumper(textParser.getFileName());
             textDumper.dump(bill);
         }
 
