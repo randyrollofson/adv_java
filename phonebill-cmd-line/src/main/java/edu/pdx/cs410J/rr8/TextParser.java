@@ -40,7 +40,7 @@ public class TextParser implements PhoneBillParser<PhoneBill> {
             try {
                 bufferedReader = new BufferedReader(new FileReader(file));
             } catch (FileNotFoundException e) {
-                System.out.println("File not found");
+                //System.out.println("File not found");
                 return null;
             }
             String readLine;
@@ -52,15 +52,17 @@ public class TextParser implements PhoneBillParser<PhoneBill> {
                 phoneBill = new PhoneBill(lines.get(0));
                 for (int i = 1; i < lines.size(); i++) {
                     String[] args = lines.get(i).split(" ");
-                    if (args.length != 6) {
+                    if (args.length != 8) {
                         System.err.println("Error: Malformatted Phone Bill");
                         System.exit(1);
                     }
-                    PhoneCall call = new PhoneCall(args[0], args[1], args[2], args[3], args[4], args[5]);
-                    if (!call.isValidPhoneNumber(args[0]) || !call.isValidPhoneNumber(args[1]) || !call.isValidDate(args[2]) || !call.isValidTime(args[3]) || !call.isValidDate(args[4]) || !call.isValidTime(args[5])) {
-                        System.err.println("Error: Text file is malformatted");
-                        System.exit(1);
-                    }
+                    PhoneCall call = new PhoneCall(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
+                    call.validatePhoneNumber(args[0]);
+                    call.validatePhoneNumber(args[1]);
+                    call.validateStartDateTime(args[2] + ' ' + args[3] + ' ' + args[4]);
+                    call.validateEndDateTime(args[5] + ' ' + args[6] + ' ' + args[7]);
+                    call.setCallDuration();
+
                     phoneBill.addPhoneCall(call);
                 }
             }

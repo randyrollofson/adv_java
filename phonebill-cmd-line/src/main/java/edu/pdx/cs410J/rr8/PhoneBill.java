@@ -2,8 +2,7 @@ package edu.pdx.cs410J.rr8;
 
 import edu.pdx.cs410J.AbstractPhoneBill;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 
 /**
  * Class for managing phone bills
@@ -49,4 +48,29 @@ public class PhoneBill extends AbstractPhoneBill<PhoneCall> {
     public Collection<PhoneCall> getPhoneCalls() {
         return this.calls;
     }
+
+    public static Comparator<PhoneCall> COMPARE_BY_START_TIME = new Comparator<PhoneCall>() {
+        public int compare(PhoneCall one, PhoneCall other) {
+            if (one.getStartTimeString().compareTo(other.getStartTimeString()) == 0) {
+                return one.getCaller().replaceAll("-", "").compareTo(other.getCaller().replaceAll("-", ""));
+            }
+            return one.getStartTimeString().compareTo(other.getStartTimeString());
+        }
+    };
+
+    public void sortBill() {
+        List<PhoneCall> phoneCallList = new ArrayList<>(calls);
+        Collections.sort(phoneCallList, COMPARE_BY_START_TIME);
+        calls = phoneCallList;
+    }
+
+//    @Override
+//    public int compare(PhoneCall o1, PhoneCall o2) {
+//        if (o1.getStartTimeString().compareTo(o2.getStartTimeString()) == 0) {
+//            return o1.getCaller().replaceAll("-", "").compareTo(o2.getCaller().replaceAll("-", ""));
+//        }
+//
+//        return o1.getStartTimeString().compareTo(o2.getStartTimeString());
+//    }
 }
+

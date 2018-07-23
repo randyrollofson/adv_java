@@ -3,12 +3,14 @@ package edu.pdx.cs410J.rr8;
 import edu.pdx.cs410J.ParserException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * The main class for the CS410J Phone Bill Project
  */
-public class Project2 {
+public class Project3 {
     static final String README = "\nREADME\n\nRandy Rollofson\nProject: phonebill\n\nThis program manages phone calls which " +
             "consist of a customer name, caller phone number\n" +
             "callee phone number, start time of a call, end time of a call, and the date that the call was made.\n" +
@@ -18,6 +20,7 @@ public class Project2 {
             "will be appended to the existing phone bill.";
 
     static private String FILE_NAME = null;
+    static private String PRETTY_FILE_NAME = null;
 
     /**
      * Main method that reads in command line args
@@ -29,9 +32,10 @@ public class Project2 {
      *         The dump method in TextDumper throws this exception if there is a problem with writing to a text file
      */
     public static void main(String[] args) throws ParserException, IOException {
-        //String filePath = "src/main/java/edu/pdx/cs410J/rr8";
         TextParser textParser = null;
+        TextParser prettyTextParser = null;
         PhoneBill bill = null;
+        PhoneBill prettyBill = null;
         if (args.length != 0 && args[0].equals("-README")) {
             displayReadme();
         }
@@ -42,6 +46,10 @@ public class Project2 {
         if (isTextFileOption(args)) {
             textParser = new TextParser(FILE_NAME);
             bill = textParser.parse();
+        }
+        if (isPrettyOption(args)) {
+            prettyTextParser = new TextParser(PRETTY_FILE_NAME);
+            prettyBill = prettyTextParser.parse();
         }
 
         if (parseOptions(args, options, parsedArgs)) {
@@ -64,29 +72,22 @@ public class Project2 {
         String calleeNumber = parsedArgs.get(2);
         String startDate = parsedArgs.get(3);
         String startTime = parsedArgs.get(4);
-        String endDate = parsedArgs.get(5);
-        String endTime = parsedArgs.get(6);
+        String startTimeAmPm = parsedArgs.get(5).toUpperCase();
+        String endDate = parsedArgs.get(6);
+        String endTime = parsedArgs.get(7);
+        String endTimeAmPm = parsedArgs.get(8).toUpperCase();
 
-        PhoneCall call = new PhoneCall(callerNumber, calleeNumber, startDate, startTime, endDate, endTime);
+        PhoneCall call = new PhoneCall(callerNumber, calleeNumber, startDate, startTime, startTimeAmPm, endDate, endTime, endTimeAmPm);
 
-        if (!call.isValidPhoneNumber(callerNumber)) {
-            System.exit(1);
-        }
-        if (!call.isValidPhoneNumber(calleeNumber)) {
-            System.exit(1);
-        }
-        if (!call.isValidDate(startDate)) {
-            System.exit(1);
-        }
-        if (!call.isValidTime(startTime)) {
-            System.exit(1);
-        }
-        if (!call.isValidDate(endDate)) {
-            System.exit(1);
-        }
-        if (!call.isValidTime(endTime)) {
-            System.exit(1);
-        }
+        String fullStartDateTime = (startDate + ' ' + startTime + ' ' + startTimeAmPm);
+        String fullEndDateTime = (endDate + ' ' + endTime + ' ' + endTimeAmPm);
+        call.validatePhoneNumber(callerNumber);
+        call.validatePhoneNumber(calleeNumber);
+        call.validateStartDateTime(fullStartDateTime);
+        call.validateEndDateTime(fullEndDateTime);
+        call.validateStartEndTimes(fullStartDateTime, fullEndDateTime);
+        call.setCallDuration();
+
         if (foundOptions) {
             implementOptions(options, call);
         }
@@ -94,10 +95,24 @@ public class Project2 {
         if (bill == null) {
             bill = new PhoneBill(customer);
         }
-            bill.addPhoneCall(call);
+        bill.addPhoneCall(call);
+        if (prettyBill == null) {
+            prettyBill = new PhoneBill(customer);
+        }
+        prettyBill.addPhoneCall(call);
+
         if (textParser != null) {
             TextDumper textDumper = new TextDumper(textParser.getFileName());
-            textDumper.dump(bill);
+            if (isTextFileOption(args)) {
+                textDumper.dump(bill);
+            }
+        }
+        if (prettyTextParser != null) {
+            PrettyPrinter prettyPrinter = new PrettyPrinter(prettyTextParser.getFileName());
+            if (isPrettyOption(args)) {
+                bill.sortBill();
+                prettyPrinter.dump(bill);
+            }
         }
 
         System.exit(0);
@@ -115,13 +130,15 @@ public class Project2 {
      */
     private static boolean parseOptions(String[] args, List<String> options, List<String> parsedArgs) {
         for (int i = 0; i < args.length; i++) {
-            if (args[i].charAt(0) == '-') {
-                if (!args[i].equals("-print") && !args[i].equals("-README") && !args[i].equals("-textFile")) {
+            if (args[i].charAt(0) == '-' && args[i].length() > 1) {
+                if (!args[i].equals("-print") && !args[i].equals("-README") && !args[i].equals("-textFile") && !args[i].equals("-pretty")) {
                     System.err.println("Error: Incorrect command line option");
                     System.exit(1);
-                } else if (!args[i].equals("-textFile") && (args[i].equals("-print") || args[i].equals("-README"))) {
+                } else if (!args[i].equals("-textFile") && !args[i].equals("-pretty") && (args[i].equals("-print") || args[i].equals("-README"))) {
                     options.add(args[i]);
                 } else if (args[i].equals("-textFile")) {
+                    i++;
+                } else if (args[i].equals("-pretty")) {
                     i++;
                 }
             } else {
@@ -144,11 +161,11 @@ public class Project2 {
             System.err.println("Missing all command line arguments");
             System.exit(1);
         }
-        if (parsedArgs.size() > 1 && parsedArgs.size() < 7) {
+        if (parsedArgs.size() > 1 && parsedArgs.size() < 9) {
             System.err.println("Missing one or more command line arguments");
             System.exit(1);
         }
-        if (parsedArgs.size() > 7) {
+        if (parsedArgs.size() > 11) {
             System.err.println("Too many command line arguments");
             System.exit(1);
         }
@@ -193,6 +210,22 @@ public class Project2 {
                     System.exit(1);
                 } else {
                     FILE_NAME = args[i + 1];
+                }
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static boolean isPrettyOption(String[] args) {
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].equals("-pretty")) {
+                if (!args[i + 1].contains(".txt") && !args[i + 1].contains("-")) {
+                    System.err.println("Error: Incorrect Pretty Print option");
+                    System.exit(1);
+                } else {
+                    PRETTY_FILE_NAME = args[i + 1];
                 }
                 return true;
             }
