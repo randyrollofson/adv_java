@@ -3,8 +3,6 @@ package edu.pdx.cs410J.rr8;
 import edu.pdx.cs410J.ParserException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -17,7 +15,7 @@ public class Project3 {
             "Phone calls are added to a phone bill that is read in from a text file.\n\n" +
             "If the bill is not found at the specified file path, a new bill will be created and added to.\n" +
             "If the file exists, the phone call information provided via the command line\n" +
-            "will be appended to the existing phone bill.";
+            "will be appended to the existing phone bill. Phone bills can be written to a file in a pretty format with the -pretty option.";
 
     static private String FILE_NAME = null;
     static private String PRETTY_FILE_NAME = null;
@@ -33,9 +31,7 @@ public class Project3 {
      */
     public static void main(String[] args) throws ParserException, IOException {
         TextParser textParser = null;
-        //TextParser prettyTextParser = null;
         PhoneBill bill = null;
-        PhoneBill prettyBill = null;
         if (args.length != 0 && args[0].equals("-README")) {
             displayReadme();
         }
@@ -47,10 +43,6 @@ public class Project3 {
             textParser = new TextParser(FILE_NAME);
             bill = textParser.parse();
         }
-//        if (isPrettyOption(args)) {
-//            prettyTextParser = new TextParser(PRETTY_FILE_NAME);
-//            prettyBill = prettyTextParser.parse();
-//        }
 
         if (parseOptions(args, options, parsedArgs)) {
             foundOptions = true;
@@ -96,10 +88,6 @@ public class Project3 {
             bill = new PhoneBill(customer);
         }
         bill.addPhoneCall(call);
-//        if (prettyBill == null) {
-//            prettyBill = new PhoneBill(customer);
-//        }
-        //prettyBill.addPhoneCall(call);
 
         if (textParser != null) {
             TextDumper textDumper = new TextDumper(textParser.getFileName());
@@ -107,14 +95,11 @@ public class Project3 {
                 textDumper.dump(bill);
             }
         }
-        //if (prettyTextParser != null) {
-            //PrettyPrinter prettyPrinter = new PrettyPrinter(PRETTY_FILE_NAME);
-            if (isPrettyOption(args)) {
-                PrettyPrinter prettyPrinter = new PrettyPrinter(PRETTY_FILE_NAME);
-                bill.sortBill();
-                prettyPrinter.dump(bill);
-            }
-        //}
+        if (isPrettyOption(args)) {
+            PrettyPrinter prettyPrinter = new PrettyPrinter(PRETTY_FILE_NAME);
+            bill.sortBill();
+            prettyPrinter.dump(bill);
+        }
 
         System.exit(0);
     }
@@ -223,6 +208,12 @@ public class Project3 {
         return false;
     }
 
+    /**
+     * Return whether or not the -pretty option was found
+     * @param args
+     *        Command line arguments
+     * @return true/false if -pretty option was found or not
+     */
     private static boolean isPrettyOption(String[] args) {
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("-pretty")) {

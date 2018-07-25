@@ -48,8 +48,8 @@ public class TextDumper implements PhoneBillDumper {
         for (PhoneCall call : calls) {
             bufferedWriter.write(call.getCaller() + ' ');
             bufferedWriter.write(call.getCallee() + ' ');
-            bufferedWriter.write(call.getStartTimeString() + ' ');
-            bufferedWriter.write(call.getEndTimeString());
+            bufferedWriter.write(call.getOriginalStartTimeString() + ' ');
+            bufferedWriter.write(call.getOriginalEndTimeString());
             bufferedWriter.newLine();
         }
         bufferedWriter.close();

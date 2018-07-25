@@ -8,13 +8,28 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
 
+/**
+ * Class for managing pretty printing of Phone bills
+ */
 public class PrettyPrinter implements PhoneBillDumper {
     private String fileName;
 
+    /**
+     * Creates a new <code>PrettyPrinter</code>
+     * @param fileName
+     *        Name of the text file to print to
+     */
     public PrettyPrinter(String fileName) {
         this.fileName = fileName;
     }
 
+    /**
+     * Prints the pretty printed Phone Bill to a text file
+     * @param bill
+     *        The PhoneBill object to be printed
+     * @throws IOException
+     *         Thrown if there is a problem writing to the text file
+     */
     @Override
     public void dump(AbstractPhoneBill bill) throws IOException {
         if (fileName.equals("-")) {

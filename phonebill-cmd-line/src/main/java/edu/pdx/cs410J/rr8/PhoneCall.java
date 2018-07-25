@@ -29,12 +29,16 @@ public class PhoneCall extends AbstractPhoneCall {
      *        The phone number of the callee
      * @param startTime
      *        The time that the call began (24-hour time)
+     * @param startTimeAmPm
+     *        Start time am/pm
      * @param endTime
      *        The time that the call began (24-hour time)
      * @param startDate
      *        The date that the call began
      * @param endDate
      *        The date that the call ended
+     * @param endTimeAmPm
+     *        End time am/pm
      */
     PhoneCall(String caller, String callee, String startDate, String startTime, String startTimeAmPm, String endDate, String endTime, String endTimeAmPm) {
         this.caller = caller;
@@ -63,7 +67,7 @@ public class PhoneCall extends AbstractPhoneCall {
 
     /**
      * Returns the date and time that this phone call was originated
-     * @return The date and time that the call began (24-hour time)
+     * @return The date and time that the call began (12-hour time, SHORT format)
      */
     @Override
     public String getStartTimeString() {
@@ -72,21 +76,51 @@ public class PhoneCall extends AbstractPhoneCall {
 
     /**
      * Returns the date and time that this phone call ended
-     * @return The date and time that the call ended (24-hour time)
+     * @return The date and time that the call ended (12-hour time, SHORT format)
      */
     @Override
     public String getEndTimeString() {
         return this.prettyEndTimeString;
     }
 
+    /**
+     * Returns original startTimeString from command line
+     * @return original startTimeString from command line
+     */
+    public String getOriginalStartTimeString() {
+        return this.startTimeString;
+    }
+
+    /**
+     * Returns original endTimeString from command line
+     * @return original endTimeString from command line
+     */
+    public String getOriginalEndTimeString() {
+        return this.endTimeString;
+    }
+
+    /**
+     * Returns the duration of the call in minutes
+     * @return the duration of the call in minutes
+     */
     public Long getCallDuration() {
         return this.callDuration;
     }
 
+    /**
+     * Sets the startDateTime Date object
+     * @param startDateTime
+     *        Date object for start date and time
+     */
     public void setStartDateTime(Date startDateTime) {
         this.startDateTime = startDateTime;
     }
 
+    /**
+     * Sets the endDateTime Date object
+     * @param endDateTime
+     *        Date object for end date and time
+     */
     public void setEndDateTime(Date endDateTime) {
         this.endDateTime = endDateTime;
     }
@@ -111,18 +145,18 @@ public class PhoneCall extends AbstractPhoneCall {
         }
     }
 
+    /**
+     * Validates the format of the start date and time, returns as Date object
+     * @param dateTime
+     *        Date and time string from the command line
+     * @return Date object containing formatted date and time
+     */
     public Date validateAndReturnStartDateTime(String dateTime) {
         try {
             SimpleDateFormat formatter1 = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
             SimpleDateFormat formatter2 = new SimpleDateFormat("MM/dd/yyyy h:mm a");
-//            SimpleDateFormat formatter3 = new SimpleDateFormat("MM/d/yyyy hh:mm a");
-//            SimpleDateFormat formatter4 = new SimpleDateFormat("MM/d/yyyy h:mm a");
-            //SimpleDateFormat formatter5 = new SimpleDateFormat("M/d/yy hh:mm a");
             Date date1 = formatter1.parse(dateTime);
             Date date2 = formatter2.parse(dateTime);
-//            Date date3 = formatter3.parse(dateTime);
-//            Date date4 = formatter4.parse(dateTime);
-            //Date date5 = formatter5.parse(dateTime);
 
             if (formatter1.format(date1).equals(dateTime)) {
                 DateFormat originalFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
@@ -138,24 +172,6 @@ public class PhoneCall extends AbstractPhoneCall {
                 prettyStartTimeString = targetFormat.format(date);
 
                 return date2;
-//            } else if (formatter3.format(date3).equals(dateTime)) {
-//                DateFormat originalFormat = new SimpleDateFormat("MM/d/yyyy hh:mm a");
-//                DateFormat targetFormat = new SimpleDateFormat("M/d/yy h:mm a");
-//                Date date = originalFormat.parse(dateTime);
-//                prettyStartTimeString = targetFormat.format(date);
-//
-//                return date3;
-//            } else if (formatter4.format(date4).equals(dateTime)) {
-//                DateFormat originalFormat = new SimpleDateFormat("M/d/yyyy hh:mm a");
-//                DateFormat targetFormat = new SimpleDateFormat("M/d/yy h:mm a");
-//                Date date = originalFormat.parse(dateTime);
-//                prettyStartTimeString = targetFormat.format(date);
-//
-//                return date4;
-//            } else if (formatter5.format(date5).equals(dateTime)) {
-//                prettyStartTimeString =dateTime;
-//
-//                return date5;
             } else {
                 System.err.println("Incorrect date/time format");
                 System.exit(1);
@@ -168,18 +184,19 @@ public class PhoneCall extends AbstractPhoneCall {
         return null;
     }
 
+    /**
+     * Validates the format of the end date and time, returns as Date object
+     * @param dateTime
+     *        Date and time string from the command line
+     * @return Date object containing formatted date and time
+     */
     public Date validateAndReturnEndDateTime(String dateTime) {
         try {
             SimpleDateFormat formatter1 = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
             SimpleDateFormat formatter2 = new SimpleDateFormat("MM/dd/yyyy h:mm a");
-//            SimpleDateFormat formatter3 = new SimpleDateFormat("MM/d/yyyy hh:mm a");
-//            SimpleDateFormat formatter4 = new SimpleDateFormat("M/d/yyyy hh:mm a");
-//            SimpleDateFormat formatter5 = new SimpleDateFormat("M/d/yy hh:mm a");
+
             Date date1 = formatter1.parse(dateTime);
             Date date2 = formatter2.parse(dateTime);
-//            Date date3 = formatter3.parse(dateTime);
-//            Date date4 = formatter4.parse(dateTime);
-//            Date date5 = formatter5.parse(dateTime);
 
             if (formatter1.format(date1).equals(dateTime)) {
                 DateFormat originalFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
@@ -195,24 +212,6 @@ public class PhoneCall extends AbstractPhoneCall {
                 prettyEndTimeString = targetFormat.format(date);
 
                 return date2;
-//            } else if (formatter3.format(date3).equals(dateTime)) {
-//                DateFormat originalFormat = new SimpleDateFormat("MM/d/yyyy hh:mm a");
-//                DateFormat targetFormat = new SimpleDateFormat("M/d/yy h:mm a");
-//                Date date = originalFormat.parse(dateTime);
-//                prettyEndTimeString = targetFormat.format(date);
-//
-//                return date3;
-//            } else if (formatter4.format(date4).equals(dateTime)) {
-//                DateFormat originalFormat = new SimpleDateFormat("M/d/yyyy hh:mm a");
-//                DateFormat targetFormat = new SimpleDateFormat("M/d/yy h:mm a");
-//                Date date = originalFormat.parse(dateTime);
-//                prettyEndTimeString = targetFormat.format(date);
-//
-//                return date4;
-//            } else if (formatter5.format(date5).equals(dateTime)) {
-//                prettyEndTimeString =dateTime;
-//
-//                return date5;
             } else {
                 System.err.println("Incorrect date/time format");
                 System.exit(1);
@@ -225,22 +224,13 @@ public class PhoneCall extends AbstractPhoneCall {
         return null;
     }
 
-//    public void validateEndDateTime(String dateTime) {
-//        try {
-//            SimpleDateFormat formatter = new SimpleDateFormat("M/d/yy h:mm a");
-//            Date date = formatter.parse(dateTime);
-//
-//            if (!formatter.format(date).equals(dateTime)) {
-//                System.err.println("Incorrect date/time format");
-//                System.exit(1);
-//            }
-//            endDateTime = date;
-//        } catch (ParseException e){
-//            System.err.println("Date/time parsing error");
-//            System.exit(1);
-//        }
-//    }
-
+    /**
+     * Checks that the start date/time is before end date/time
+     * @param fullStartDateTime
+     *        start date/time string
+     * @param fullEndDateTime
+     *        end date/time string
+     */
     public void validateStartEndTimes(String fullStartDateTime, String fullEndDateTime) {
         try {
             SimpleDateFormat formatter = new SimpleDateFormat("M/d/yy h:mm a");
@@ -257,6 +247,9 @@ public class PhoneCall extends AbstractPhoneCall {
         }
     }
 
+    /**
+     * Sets the duration of the call in minutes
+     */
     public void setCallDuration() {
         long temp = endDateTime.getTime() - startDateTime.getTime();
         callDuration = temp / (60 * 1000);

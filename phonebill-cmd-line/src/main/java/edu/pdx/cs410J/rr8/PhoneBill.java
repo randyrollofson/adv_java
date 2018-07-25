@@ -49,6 +49,9 @@ public class PhoneBill extends AbstractPhoneBill<PhoneCall> {
         return this.calls;
     }
 
+    /**
+     * Compares each phone call in the phone bill and sorts them by date/time. If date/time are the same, they are sorted by caller number
+     */
     public static Comparator<PhoneCall> COMPARE_BY_START_TIME = new Comparator<PhoneCall>() {
         public int compare(PhoneCall one, PhoneCall other) {
             if (one.getStartTimeString().compareTo(other.getStartTimeString()) == 0) {
@@ -58,6 +61,9 @@ public class PhoneBill extends AbstractPhoneBill<PhoneCall> {
         }
     };
 
+    /**
+     * Helper function that sorts a list of phone calls in a phone bill
+     */
     public void sortBill() {
         List<PhoneCall> phoneCallList = new ArrayList<>(calls);
         Collections.sort(phoneCallList, COMPARE_BY_START_TIME);
