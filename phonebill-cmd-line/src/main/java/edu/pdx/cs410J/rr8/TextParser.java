@@ -59,8 +59,8 @@ public class TextParser implements PhoneBillParser<PhoneBill> {
                     PhoneCall call = new PhoneCall(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
                     call.validatePhoneNumber(args[0]);
                     call.validatePhoneNumber(args[1]);
-                    call.validateStartDateTime(args[2] + ' ' + args[3] + ' ' + args[4]);
-                    call.validateEndDateTime(args[5] + ' ' + args[6] + ' ' + args[7]);
+                    call.setStartDateTime(call.validateAndReturnStartDateTime(args[2] + ' ' + args[3] + ' ' + args[4]));
+                    call.setEndDateTime(call.validateAndReturnEndDateTime(args[5] + ' ' + args[6] + ' ' + args[7]));
                     call.setCallDuration();
 
                     phoneBill.addPhoneCall(call);

@@ -33,7 +33,7 @@ public class Project3 {
      */
     public static void main(String[] args) throws ParserException, IOException {
         TextParser textParser = null;
-        TextParser prettyTextParser = null;
+        //TextParser prettyTextParser = null;
         PhoneBill bill = null;
         PhoneBill prettyBill = null;
         if (args.length != 0 && args[0].equals("-README")) {
@@ -47,10 +47,10 @@ public class Project3 {
             textParser = new TextParser(FILE_NAME);
             bill = textParser.parse();
         }
-        if (isPrettyOption(args)) {
-            prettyTextParser = new TextParser(PRETTY_FILE_NAME);
-            prettyBill = prettyTextParser.parse();
-        }
+//        if (isPrettyOption(args)) {
+//            prettyTextParser = new TextParser(PRETTY_FILE_NAME);
+//            prettyBill = prettyTextParser.parse();
+//        }
 
         if (parseOptions(args, options, parsedArgs)) {
             foundOptions = true;
@@ -83,8 +83,8 @@ public class Project3 {
         String fullEndDateTime = (endDate + ' ' + endTime + ' ' + endTimeAmPm);
         call.validatePhoneNumber(callerNumber);
         call.validatePhoneNumber(calleeNumber);
-        call.validateStartDateTime(fullStartDateTime);
-        call.validateEndDateTime(fullEndDateTime);
+        call.setStartDateTime(call.validateAndReturnStartDateTime(fullStartDateTime));
+        call.setEndDateTime(call.validateAndReturnEndDateTime(fullEndDateTime));
         call.validateStartEndTimes(fullStartDateTime, fullEndDateTime);
         call.setCallDuration();
 
@@ -96,10 +96,10 @@ public class Project3 {
             bill = new PhoneBill(customer);
         }
         bill.addPhoneCall(call);
-        if (prettyBill == null) {
-            prettyBill = new PhoneBill(customer);
-        }
-        prettyBill.addPhoneCall(call);
+//        if (prettyBill == null) {
+//            prettyBill = new PhoneBill(customer);
+//        }
+        //prettyBill.addPhoneCall(call);
 
         if (textParser != null) {
             TextDumper textDumper = new TextDumper(textParser.getFileName());
@@ -107,13 +107,14 @@ public class Project3 {
                 textDumper.dump(bill);
             }
         }
-        if (prettyTextParser != null) {
-            PrettyPrinter prettyPrinter = new PrettyPrinter(prettyTextParser.getFileName());
+        //if (prettyTextParser != null) {
+            //PrettyPrinter prettyPrinter = new PrettyPrinter(PRETTY_FILE_NAME);
             if (isPrettyOption(args)) {
+                PrettyPrinter prettyPrinter = new PrettyPrinter(PRETTY_FILE_NAME);
                 bill.sortBill();
                 prettyPrinter.dump(bill);
             }
-        }
+        //}
 
         System.exit(0);
     }
@@ -165,7 +166,7 @@ public class Project3 {
             System.err.println("Missing one or more command line arguments");
             System.exit(1);
         }
-        if (parsedArgs.size() > 11) {
+        if (parsedArgs.size() > 9) {
             System.err.println("Too many command line arguments");
             System.exit(1);
         }
@@ -210,6 +211,10 @@ public class Project3 {
                     System.exit(1);
                 } else {
                     FILE_NAME = args[i + 1];
+                    if (FILE_NAME.equals(PRETTY_FILE_NAME)) {
+                        System.err.println("Error: FILE_NAME can not be the same as PRETTY_FILE_NAME");
+                        System.exit(1);
+                    }
                 }
                 return true;
             }
@@ -226,6 +231,10 @@ public class Project3 {
                     System.exit(1);
                 } else {
                     PRETTY_FILE_NAME = args[i + 1];
+                    if (PRETTY_FILE_NAME.equals(FILE_NAME)) {
+                        System.err.println("Error: PRETTY_FILE_NAME can not be the same as FILE_NAME");
+                        System.exit(1);
+                    }
                 }
                 return true;
             }

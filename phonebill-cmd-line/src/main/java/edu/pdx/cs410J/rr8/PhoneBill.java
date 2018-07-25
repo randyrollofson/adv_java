@@ -63,14 +63,5 @@ public class PhoneBill extends AbstractPhoneBill<PhoneCall> {
         Collections.sort(phoneCallList, COMPARE_BY_START_TIME);
         calls = phoneCallList;
     }
-
-//    @Override
-//    public int compare(PhoneCall o1, PhoneCall o2) {
-//        if (o1.getStartTimeString().compareTo(o2.getStartTimeString()) == 0) {
-//            return o1.getCaller().replaceAll("-", "").compareTo(o2.getCaller().replaceAll("-", ""));
-//        }
-//
-//        return o1.getStartTimeString().compareTo(o2.getStartTimeString());
-//    }
 }
 

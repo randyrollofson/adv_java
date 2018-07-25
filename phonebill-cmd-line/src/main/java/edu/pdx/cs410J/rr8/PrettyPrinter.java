@@ -26,9 +26,9 @@ public class PrettyPrinter implements PhoneBillDumper {
                 System.out.println("CALL " + i);
                 System.out.println("Caller Number: " + call.getCaller());
                 System.out.println("Callee Number: " + call.getCallee());
-                System.out.println("Call Start Date/Time: " + call.getStartTimeString());
-                System.out.println("Call End Date/Time: " + call.getEndTimeString());
-                System.out.println("Call Duration: " + call.getCallDuration() + " minutes");
+                System.out.println("Start Date/Time: " + call.getStartTimeString());
+                System.out.println("End Date/Time: " + call.getEndTimeString());
+                System.out.println("Duration: " + call.getCallDuration() + " minutes");
                 System.out.println();
                 i++;
             }
