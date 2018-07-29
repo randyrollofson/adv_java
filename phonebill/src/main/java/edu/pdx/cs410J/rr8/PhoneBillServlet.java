@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,10 +20,15 @@ import java.util.Map;
  */
 public class PhoneBillServlet extends HttpServlet
 {
-    static final String WORD_PARAMETER = "word";
+    static final String CUSTOMER_PARAMETER = "customer";
     static final String DEFINITION_PARAMETER = "definition";
+    private static final String CALLER_PARAMETER = "caller";
+    private static final String CALLEE_PARAMETER = "callee";
+    private static final String START_TIME_PARAMETER = "startTime";
+    private static final String END_TIME_PARAMETER = "endTime";
 
     private final Map<String, String> dictionary = new HashMap<>();
+    private Map<String, PhoneBill> bills = new HashMap<>();
 
     /**
      * Handles an HTTP GET request from a client by writing the definition of the
@@ -35,12 +41,20 @@ public class PhoneBillServlet extends HttpServlet
     {
         response.setContentType( "text/plain" );
 
-        String word = getParameter( WORD_PARAMETER, request );
-        if (word != null) {
-            writeDefinition(word, response);
+        String customer = getParameter(CUSTOMER_PARAMETER, request );
+        writePrettyPhoneBill(customer, response);
+    }
+
+    private void writePrettyPhoneBill(String customer, HttpServletResponse response) throws IOException {
+        PhoneBill bill = getPhoneBill(customer);
+        if (bill == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
         } else {
-            writeAllDictionaryEntries(response);
+            PrintWriter writer = response.getWriter();
+            PrettyPrinter pretty = new PrettyPrinter(writer);
+            pretty.dump(bill);
+            response.setStatus(HttpServletResponse.SC_OK);
         }
     }
 
@@ -54,23 +68,28 @@ public class PhoneBillServlet extends HttpServlet
     {
         response.setContentType( "text/plain" );
 
-        String word = getParameter(WORD_PARAMETER, request );
-        if (word == null) {
-            missingRequiredParameter(response, WORD_PARAMETER);
+        String customer = getParameter(CUSTOMER_PARAMETER, request );
+        if (customer == null) {
+            missingRequiredParameter(response, CUSTOMER_PARAMETER);
             return;
         }
 
-        String definition = getParameter(DEFINITION_PARAMETER, request );
-        if ( definition == null) {
-            missingRequiredParameter( response, DEFINITION_PARAMETER );
-            return;
+        PhoneBill bill = getPhoneBill(customer);
+        if (bill == null) {
+            bill = new PhoneBill(customer);
+            addPhoneBill(bill);
         }
 
-        this.dictionary.put(word, definition);
+        String caller = getParameter(CALLER_PARAMETER, request);
+        String callee = getParameter(CALLEE_PARAMETER, request);
+        String startTime = getParameter(START_TIME_PARAMETER, request);
+        String endTime = getParameter(END_TIME_PARAMETER, request);
 
-        PrintWriter pw = response.getWriter();
-        pw.println(Messages.definedWordAs(word, definition));
-        pw.flush();
+        Date startDate = new Date(Long.parseLong(startTime));
+        Date endDate = new Date(Long.parseLong(endTime));
+
+        PhoneCall call = new PhoneCall(caller, callee, startDate, endDate);
+        bill.addPhoneCall(call);
 
         response.setStatus( HttpServletResponse.SC_OK);
     }
@@ -156,9 +175,19 @@ public class PhoneBillServlet extends HttpServlet
       }
     }
 
+//    @VisibleForTesting
+//    String getDefinition(String word) {
+//        return this.dictionary.get(word);
+//    }
+
     @VisibleForTesting
-    String getDefinition(String word) {
-        return this.dictionary.get(word);
+    PhoneBill getPhoneBill(String customer) {
+        return this.bills.get(customer);
+    }
+
+    @VisibleForTesting
+    void addPhoneBill(PhoneBill bill) {
+        this.bills.put(bill.getCustomer(), bill);
     }
 
 }

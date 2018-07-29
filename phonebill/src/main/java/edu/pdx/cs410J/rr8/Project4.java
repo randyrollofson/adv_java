@@ -60,22 +60,23 @@ public class Project4 {
 
         String message;
         try {
-            if (word == null) {
+//            if (word == null) {
                 // Print all word/definition pairs
-                Map<String, String> dictionary = client.getAllDictionaryEntries();
-                StringWriter sw = new StringWriter();
-                Messages.formatDictionaryEntries(new PrintWriter(sw, true), dictionary);
-                message = sw.toString();
+                String customerName = "Customer";
+                message = client.getPrettyPhoneBill(customerName);
+//                StringWriter sw = new StringWriter();
+//                Messages.formatDictionaryEntries(new PrintWriter(sw, true), dictionary);
+//                message = sw.toString();
 
-            } else if (definition == null) {
-                // Print all dictionary entries
-                message = Messages.formatDictionaryEntry(word, client.getDefinition(word));
-
-            } else {
-                // Post the word/definition pair
-                client.addDictionaryEntry(word, definition);
-                message = Messages.definedWordAs(word, definition);
-            }
+//            } else if (definition == null) {
+//                // Print all dictionary entries
+//                message = Messages.formatDictionaryEntry(word, client.getDefinition(word));
+//
+//            } else {
+//                // Post the word/definition pair
+//                client.addPhoneCall(word, definition);
+//                message = Messages.definedWordAs(word, definition);
+//            }
 
         } catch ( IOException ex ) {
             error("While contacting server: " + ex);

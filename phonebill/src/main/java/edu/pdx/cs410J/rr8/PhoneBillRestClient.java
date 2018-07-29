@@ -4,8 +4,8 @@ import com.google.common.annotations.VisibleForTesting;
 import edu.pdx.cs410J.web.HttpRequestHelper;
 
 import java.io.IOException;
-import java.util.Map;
 
+import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
 import static java.net.HttpURLConnection.HTTP_OK;
 
 /**
@@ -33,11 +33,16 @@ public class PhoneBillRestClient extends HttpRequestHelper
 
     /**
      * Returns all dictionary entries from the server
+     * @param customerName
      */
-    public Map<String, String> getAllDictionaryEntries() throws IOException {
-      Response response = get(this.url);
-      return Messages.parseDictionary(response.getContent());
+    public String getPrettyPhoneBill(String customerName) throws IOException {
+        Response response = get(this.url, "customer", customerName);
+
+        throwExceptionIfNotOkayHttpStatus(response);
+
+        return response.getContent();
     }
+
 
     /**
      * Returns the definition for the given word
@@ -49,9 +54,17 @@ public class PhoneBillRestClient extends HttpRequestHelper
       return Messages.parseDictionaryEntry(content).getValue();
     }
 
-    public void addDictionaryEntry(String word, String definition) throws IOException {
-      Response response = postToMyURL("word", word, "definition", definition);
-      throwExceptionIfNotOkayHttpStatus(response);
+    public void addPhoneCall(String customerName, PhoneCall call) throws IOException {
+        String [] postParameters = {
+            "customer", "customerName",
+            "caller", call.getCaller(),
+            "callee", call.getCallee(),
+            "startTime", String.valueOf(call.getStartTime().getTime()),
+            "endTime", String.valueOf(call.getEndTime().getTime()),
+
+        };
+        Response response = postToMyURL(postParameters);
+        throwExceptionIfNotOkayHttpStatus(response);
     }
 
     @VisibleForTesting
@@ -59,17 +72,21 @@ public class PhoneBillRestClient extends HttpRequestHelper
       return post(this.url, dictionaryEntries);
     }
 
-    public void removeAllDictionaryEntries() throws IOException {
+    public void removeAllPhoneBills() throws IOException {
       Response response = delete(this.url);
       throwExceptionIfNotOkayHttpStatus(response);
     }
 
     private Response throwExceptionIfNotOkayHttpStatus(Response response) {
-      int code = response.getCode();
-      if (code != HTTP_OK) {
-        throw new PhoneBillRestException(code);
-      }
-      return response;
+        int code = response.getCode();
+        if (code == HTTP_NOT_FOUND) {
+            String customer = response.getContent();
+            throw new NoSuchPhoneBillException(customer);
+
+        } else if (code != HTTP_OK) {
+            throw new PhoneBillRestException(code);
+        }
+        return response;
     }
 
     private class PhoneBillRestException extends RuntimeException {
@@ -77,5 +94,4 @@ public class PhoneBillRestClient extends HttpRequestHelper
         super("Got an HTTP Status Code of " + httpStatusCode);
       }
     }
-
 }
