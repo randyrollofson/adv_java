@@ -22,7 +22,7 @@ public class PhoneBillRestClient extends HttpRequestHelper
 
 
     /**
-     * Creates a client to the Phone Bil REST service running on the given host and port
+     * Creates a client to the Phone Bill REST service running on the given host and port
      * @param hostName The name of the host
      * @param port The port
      */
@@ -32,7 +32,7 @@ public class PhoneBillRestClient extends HttpRequestHelper
     }
 
     /**
-     * Returns all dictionary entries from the server
+     * Returns all phone calls from the server for a given customer
      * @param customerName
      */
     public String getPrettyPhoneBill(String customerName) throws IOException {
@@ -44,19 +44,19 @@ public class PhoneBillRestClient extends HttpRequestHelper
     }
 
 
-    /**
-     * Returns the definition for the given word
-     */
-    public String getDefinition(String word) throws IOException {
-      Response response = get(this.url, "word", word);
-      throwExceptionIfNotOkayHttpStatus(response);
-      String content = response.getContent();
-      return Messages.parseDictionaryEntry(content).getValue();
-    }
+//    /**
+//     * Returns the definition for the given word
+//     */
+//    public String getDefinition(String word) throws IOException {
+//      Response response = get(this.url, "word", word);
+//      throwExceptionIfNotOkayHttpStatus(response);
+//      String content = response.getContent();
+//      return Messages.parseDictionaryEntry(content).getValue();
+//    }
 
     public void addPhoneCall(String customerName, PhoneCall call) throws IOException {
         String [] postParameters = {
-            "customer", "customerName",
+            "customer", customerName,
             "caller", call.getCaller(),
             "callee", call.getCallee(),
             "startTime", String.valueOf(call.getStartTime().getTime()),
@@ -68,8 +68,8 @@ public class PhoneBillRestClient extends HttpRequestHelper
     }
 
     @VisibleForTesting
-    Response postToMyURL(String... dictionaryEntries) throws IOException {
-      return post(this.url, dictionaryEntries);
+    Response postToMyURL(String... postParameters) throws IOException {
+      return post(this.url, postParameters);
     }
 
     public void removeAllPhoneBills() throws IOException {

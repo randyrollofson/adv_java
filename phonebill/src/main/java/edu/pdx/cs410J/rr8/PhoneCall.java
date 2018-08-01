@@ -65,7 +65,7 @@ public class PhoneCall extends AbstractPhoneCall {
     }
 
     private String formatDate(Date date) {
-        return DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG).format(date);
+        return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(date);
     }
 
     /**
@@ -88,48 +88,6 @@ public class PhoneCall extends AbstractPhoneCall {
         return this.endTime;
     }
 
-//    /**
-//     * Returns original startTimeString from command line
-//     * @return original startTimeString from command line
-//     */
-//    public String getOriginalStartTimeString() {
-//        return this.startTimeString;
-//    }
-//
-//    /**
-//     * Returns original endTimeString from command line
-//     * @return original endTimeString from command line
-//     */
-//    public String getOriginalEndTimeString() {
-//        return this.endTimeString;
-//    }
-//
-//    /**
-//     * Returns the duration of the call in minutes
-//     * @return the duration of the call in minutes
-//     */
-//    public Long getCallDuration() {
-//        return this.callDuration;
-//    }
-
-//    /**
-//     * Sets the startDateTime Date object
-//     * @param startDateTime
-//     *        Date object for start date and time
-//     */
-//    public void setStartDateTime(Date startTime) {
-//        this.startDateTime = startDateTime;
-//    }
-//
-//    /**
-//     * Sets the endDateTime Date object
-//     * @param endDateTime
-//     *        Date object for end date and time
-//     */
-//    public void setEndDateTime(Date endDateTime) {
-//        this.endDateTime = endDateTime;
-//    }
-
     /**
      * Returns whether or not a phone number has the correct format
      * @param phoneNumber
@@ -149,85 +107,6 @@ public class PhoneCall extends AbstractPhoneCall {
             System.exit(1);
         }
     }
-
-    /**
-     * Validates the format of the start date and time, returns as Date object
-     * @param dateTime
-     *        Date and time string from the command line
-     * @return Date object containing formatted date and time
-     */
-//    public Date validateAndReturnStartDateTime(String dateTime) {
-//        try {
-//            SimpleDateFormat formatter1 = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
-//            SimpleDateFormat formatter2 = new SimpleDateFormat("MM/dd/yyyy h:mm a");
-//            Date date1 = formatter1.parse(dateTime);
-//            Date date2 = formatter2.parse(dateTime);
-//
-//            if (formatter1.format(date1).equals(dateTime)) {
-//                DateFormat originalFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
-//                DateFormat targetFormat = new SimpleDateFormat("M/d/yy h:mm a");
-//                Date date = originalFormat.parse(dateTime);
-//                prettyStartTimeString = targetFormat.format(date);
-//
-//                return date1;
-//            } else if (formatter2.format(date2).equals(dateTime)) {
-//                DateFormat originalFormat = new SimpleDateFormat("MM/dd/yyyy h:mm a");
-//                DateFormat targetFormat = new SimpleDateFormat("M/d/yy h:mm a");
-//                Date date = originalFormat.parse(dateTime);
-//                prettyStartTimeString = targetFormat.format(date);
-//
-//                return date2;
-//            } else {
-//                System.err.println("Incorrect date/time format");
-//                System.exit(1);
-//            }
-//        } catch (ParseException e){
-//            System.err.println("Date parsing error");
-//            System.exit(1);
-//        }
-//
-//        return null;
-//    }
-
-    /**
-     * Validates the format of the end date and time, returns as Date object
-     * @param dateTime
-     *        Date and time string from the command line
-     * @return Date object containing formatted date and time
-     */
-//    public Date validateAndReturnEndDateTime(String dateTime) {
-//        try {
-//            SimpleDateFormat formatter1 = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
-//            SimpleDateFormat formatter2 = new SimpleDateFormat("MM/dd/yyyy h:mm a");
-//
-//            Date date1 = formatter1.parse(dateTime);
-//            Date date2 = formatter2.parse(dateTime);
-//
-//            if (formatter1.format(date1).equals(dateTime)) {
-//                DateFormat originalFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
-//                DateFormat targetFormat = new SimpleDateFormat("M/d/yy h:mm a");
-//                Date date = originalFormat.parse(dateTime);
-//                prettyEndTimeString = targetFormat.format(date);
-//
-//                return date1;
-//            } else if (formatter2.format(date2).equals(dateTime)) {
-//                DateFormat originalFormat = new SimpleDateFormat("M/dd/yyyy h:mm a");
-//                DateFormat targetFormat = new SimpleDateFormat("M/d/yy h:mm a");
-//                Date date = originalFormat.parse(dateTime);
-//                prettyEndTimeString = targetFormat.format(date);
-//
-//                return date2;
-//            } else {
-//                System.err.println("Incorrect date/time format");
-//                System.exit(1);
-//            }
-//        } catch (ParseException e){
-//            System.err.println("Date parsing error");
-//            System.exit(1);
-//        }
-//
-//        return null;
-//    }
 
     /**
      * Checks that the start date/time is before end date/time

@@ -40,6 +40,7 @@ public class PhoneBillRestClientIT {
     client.getPrettyPhoneBill("No such customer");
   }
 
+  @Ignore
   @Test
   public void test2AddOnePhoneCall() throws IOException {
     PhoneBillRestClient client = newPhoneBillRestClient();
