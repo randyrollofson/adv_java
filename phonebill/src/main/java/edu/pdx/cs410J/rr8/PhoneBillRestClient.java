@@ -4,7 +4,6 @@ import com.google.common.annotations.VisibleForTesting;
 import edu.pdx.cs410J.web.HttpRequestHelper;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 
 import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
 import static java.net.HttpURLConnection.HTTP_OK;
@@ -45,25 +44,12 @@ public class PhoneBillRestClient extends HttpRequestHelper
     }
 
     public String getCallsWithinRange(String customerName, String startTime, String endTime) throws IOException {
-        //String startTimeUrlEncoded = URLEncoder.encode(startTime, "UTF-8");
-        //String endTimeUrlEncoded = URLEncoder.encode(endTime, "UTF-8");
         Response response = get(this.url, "customer", customerName, "startTime", startTime, "endTime", endTime);
 
         throwExceptionIfNotOkayHttpStatus(response);
 
         return response.getContent();
     }
-
-
-//    /**
-//     * Returns the definition for the given word
-//     */
-//    public String getDefinition(String word) throws IOException {
-//      Response response = get(this.url, "word", word);
-//      throwExceptionIfNotOkayHttpStatus(response);
-//      String content = response.getContent();
-//      return Messages.parseDictionaryEntry(content).getValue();
-//    }
 
     public void addPhoneCall(String customerName, PhoneCall call) throws IOException {
         String [] postParameters = {
@@ -91,11 +77,15 @@ public class PhoneBillRestClient extends HttpRequestHelper
     private Response throwExceptionIfNotOkayHttpStatus(Response response) {
         int code = response.getCode();
         if (code == HTTP_NOT_FOUND) {
-            String customer = response.getContent();
-            throw new NoSuchPhoneBillException(customer);
+            //String customer = response.getContent();
+            //throw new NoSuchPhoneBillException(customer);
+            System.err.println("Error: HTTP status not found");
+            System.exit(1);
 
         } else if (code != HTTP_OK) {
-            throw new PhoneBillRestException(code);
+            //throw new PhoneBillRestException(code);
+            System.err.println("Error: HTTP status " + code);
+            System.exit(1);
         }
         return response;
     }

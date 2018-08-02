@@ -53,6 +53,8 @@ public class PhoneBillServlet extends HttpServlet
             try {
                 writePrettyPhoneBillWithinRange(customer, startTime, endTime, response);
             } catch (ParseException e) {
+                //TODO handle error
+                response.setStatus(404);
                 System.err.println("Phone Bill parsing error");
                 System.exit(1);
             }
@@ -91,7 +93,9 @@ public class PhoneBillServlet extends HttpServlet
             }
             if (editedBill.getPhoneCalls().isEmpty()) {
                 response.setStatus(HttpServletResponse.SC_OK);
-                Messages.returnedEmptyPhoneBill();
+                System.out.println("Query returned empty phone bill");
+
+                return;
 
             }
             PrintWriter writer = response.getWriter();
@@ -169,40 +173,6 @@ public class PhoneBillServlet extends HttpServlet
     }
 
     /**
-     * Writes the definition of the given word to the HTTP response.
-     *
-     * The text of the message is formatted with
-     * {@link Messages#formatDictionaryEntry(String, String)}
-     */
-    private void writeDefinition(String word, HttpServletResponse response ) throws IOException
-    {
-        String definition = this.dictionary.get(word);
-
-        PrintWriter pw = response.getWriter();
-        pw.println(Messages.formatDictionaryEntry(word, definition));
-
-        pw.flush();
-
-        response.setStatus( HttpServletResponse.SC_OK );
-    }
-
-    /**
-     * Writes all of the dictionary entries to the HTTP response.
-     *
-     * The text of the message is formatted with
-     * {@link Messages#formatDictionaryEntry(String, String)}
-     */
-    private void writeAllDictionaryEntries(HttpServletResponse response ) throws IOException
-    {
-        PrintWriter pw = response.getWriter();
-        Messages.formatDictionaryEntries(pw, dictionary);
-
-        pw.flush();
-
-        response.setStatus( HttpServletResponse.SC_OK );
-    }
-
-    /**
      * Returns the value of the HTTP request parameter with the given name.
      *
      * @return <code>null</code> if the value of the parameter is
@@ -217,11 +187,6 @@ public class PhoneBillServlet extends HttpServlet
         return value;
       }
     }
-
-//    @VisibleForTesting
-//    String getDefinition(String word) {
-//        return this.dictionary.get(word);
-//    }
 
     @VisibleForTesting
     PhoneBill getPhoneBill(String customer) {

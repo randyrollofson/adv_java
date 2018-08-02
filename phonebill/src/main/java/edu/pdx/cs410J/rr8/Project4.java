@@ -1,20 +1,12 @@
 package edu.pdx.cs410J.rr8;
 
-import edu.pdx.cs410J.ParserException;
-import edu.pdx.cs410J.web.HttpRequestHelper;
-
 import java.io.IOException;
-import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.net.ConnectException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.text.DateFormat;
-import java.time.format.DateTimeFormatter;
 
 /**
  * The main class that parses the command line and communicates with the
@@ -36,11 +28,7 @@ public class Project4 {
     public static boolean searchOn = false;
 
 
-    public static void main(String[] args) throws ParserException, IOException {
-        //String portString = null;
-        //String hostName = null;
-        //TextParser textParser = null;
-        //PhoneBill bill = null;
+    public static void main(String[] args) throws IOException {
         if (args.length != 0 && args[0].equals("-README")) {
             displayReadme();
         }
@@ -57,6 +45,7 @@ public class Project4 {
 
         PhoneBillRestClient client = new PhoneBillRestClient(host, port);
 
+
         if (host == null || port == 0) {
             System.err.println("Port/Host Error");
             System.exit(1);
@@ -65,9 +54,30 @@ public class Project4 {
         if (parseOptions(args, options, parsedArgs)) {
             foundOptions = true;
         }
+
         validateArgs(parsedArgs);
 
         String customer = parsedArgs.get(0);
+        if (customer.getClass() != String.class) {
+            System.err.println("Customer name is not a string");
+            System.exit(1);
+        }
+
+        if (parsedArgs.size() == 1) {
+            String response = null;
+            try {
+                // Print all phone calls in a phone bill
+                response = client.getPrettyPhoneBill(customer);
+
+            } catch (IOException ex) {
+                System.err.println("Status Code: 404\nError while contacting server");
+                System.exit(1);
+            }
+
+            System.out.println(response);
+            System.exit(0);
+        }
+
         String startDate;
         String startTime;
         String startTimeAmPm;
@@ -86,16 +96,15 @@ public class Project4 {
             String fullStartDateTime = (startDate + ' ' + startTime + ' ' + startTimeAmPm);
             String fullEndDateTime = (endDate + ' ' + endTime + ' ' + endTimeAmPm);
 
-            String response;
+            String response = null;
 
             try {
                 // Print all phone calls within the given range
                 response = client.getCallsWithinRange(customer, fullStartDateTime, fullEndDateTime);
 
             } catch ( IOException ex ) {
-                //System.err.println("Status Code: 404\nError while contacting server");
-                System.err.println(Messages.returnedEmptyPhoneBill());
-                return;
+                System.err.println("Status Code: 404\nError while contacting server");
+                System.exit(1);
             }
 
             System.out.println(response);
@@ -189,7 +198,7 @@ public class Project4 {
             System.exit(1);
         }
         if (searchOn) {
-            if (parsedArgs.size() > 1 && parsedArgs.size() < 7) {
+            if (parsedArgs.size() < 7) {
                 System.err.println("Missing one or more command line arguments");
                 System.exit(1);
             }
@@ -243,19 +252,11 @@ public class Project4 {
             Date date2 = formatter2.parse(dateTime);
 
             if (formatter1.format(date1).equals(dateTime)) {
-                DateFormat originalFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
-                DateFormat targetFormat = new SimpleDateFormat("M/d/yy h:mm a");
-                Date date = originalFormat.parse(dateTime);
-                //prettyEndTimeString = targetFormat.format(date);
 
                 return date1;
             } else if (formatter2.format(date2).equals(dateTime)) {
-                DateFormat originalFormat = new SimpleDateFormat("M/dd/yyyy h:mm a");
-                //DateFormat targetFormat = new SimpleDateFormat("M/d/yy h:mm a");
-                Date date = originalFormat.parse(dateTime);
-                //prettyEndTimeString = targetFormat.format(date);
 
-                return date;
+                return date2;
             } else {
                 System.err.println("Incorrect date/time format");
                 System.exit(1);
