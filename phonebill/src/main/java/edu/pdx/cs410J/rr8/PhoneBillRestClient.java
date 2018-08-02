@@ -79,7 +79,7 @@ public class PhoneBillRestClient extends HttpRequestHelper
         if (code == HTTP_NOT_FOUND) {
             //String customer = response.getContent();
             //throw new NoSuchPhoneBillException(customer);
-            System.err.println("Error: HTTP status not found");
+            System.err.println("No such customer");
             System.exit(1);
 
         } else if (code != HTTP_OK) {

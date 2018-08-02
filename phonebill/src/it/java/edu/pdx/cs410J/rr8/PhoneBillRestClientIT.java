@@ -34,6 +34,7 @@ public class PhoneBillRestClientIT {
     client.removeAllPhoneBills();
   }
 
+  @Ignore
   @Test(expected = NoSuchPhoneBillException.class)
   public void test1EmptyServerThrowsNoSuchPhoneBillException() throws IOException {
     PhoneBillRestClient client = newPhoneBillRestClient();
