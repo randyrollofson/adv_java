@@ -33,15 +33,20 @@ public class Project4 {
     public static final String MISSING_ARGS = "Missing command line arguments";
     public static String host = null;
     public static int port = 0;
+    public static boolean searchOn = false;
 
 
     public static void main(String[] args) throws ParserException, IOException {
         //String portString = null;
         //String hostName = null;
         //TextParser textParser = null;
-        PhoneBill bill = null;
+        //PhoneBill bill = null;
         if (args.length != 0 && args[0].equals("-README")) {
             displayReadme();
+        }
+
+        if (isSearchOption(args)) {
+            searchOn = true;
         }
         boolean foundOptions = false;
         List<String> options = new ArrayList<>();
@@ -49,6 +54,8 @@ public class Project4 {
 
         validateHostOption(args);
         validatePortOption(args);
+
+        PhoneBillRestClient client = new PhoneBillRestClient(host, port);
 
         if (host == null || port == 0) {
             System.err.println("Port/Host Error");
@@ -59,51 +66,81 @@ public class Project4 {
             foundOptions = true;
         }
         validateArgs(parsedArgs);
+
         String customer = parsedArgs.get(0);
-        String callerNumber = parsedArgs.get(1);
-        String calleeNumber = parsedArgs.get(2);
-        String startDate = parsedArgs.get(3);
-        String startTime = parsedArgs.get(4);
-        String startTimeAmPm = parsedArgs.get(5).toUpperCase();
-        String endDate = parsedArgs.get(6);
-        String endTime = parsedArgs.get(7);
-        String endTimeAmPm = parsedArgs.get(8).toUpperCase();
+        String startDate;
+        String startTime;
+        String startTimeAmPm;
+        String endDate;
+        String endTime;
+        String endTimeAmPm;
+        String callerNumber;
+        String calleeNumber;
+        if (searchOn) {
+            startDate = parsedArgs.get(1);
+            startTime = parsedArgs.get(2);
+            startTimeAmPm = parsedArgs.get(3).toUpperCase();
+            endDate = parsedArgs.get(4);
+            endTime = parsedArgs.get(5);
+            endTimeAmPm = parsedArgs.get(6).toUpperCase();
+            String fullStartDateTime = (startDate + ' ' + startTime + ' ' + startTimeAmPm);
+            String fullEndDateTime = (endDate + ' ' + endTime + ' ' + endTimeAmPm);
 
-        String fullStartDateTime = (startDate + ' ' + startTime + ' ' + startTimeAmPm);
-        String fullEndDateTime = (endDate + ' ' + endTime + ' ' + endTimeAmPm);
+            String response;
 
-        PhoneCall call = new PhoneCall(callerNumber, calleeNumber, validateAndReturnEndDateTime(fullStartDateTime), validateAndReturnEndDateTime(fullEndDateTime));
+            try {
+                // Print all phone calls within the given range
+                response = client.getCallsWithinRange(customer, fullStartDateTime, fullEndDateTime);
 
-        call.validatePhoneNumber(callerNumber);
-        call.validatePhoneNumber(calleeNumber);
-        call.validateStartEndTimes(fullStartDateTime, fullEndDateTime);
+            } catch ( IOException ex ) {
+                //System.err.println("Status Code: 404\nError while contacting server");
+                System.err.println(Messages.returnedEmptyPhoneBill());
+                return;
+            }
 
-        if (foundOptions) {
-            implementOptions(options, call);
+            System.out.println(response);
+            System.exit(0);
+        } else {
+            callerNumber = parsedArgs.get(1);
+            calleeNumber = parsedArgs.get(2);
+            startDate = parsedArgs.get(3);
+            startTime = parsedArgs.get(4);
+            startTimeAmPm = parsedArgs.get(5).toUpperCase();
+            endDate = parsedArgs.get(6);
+            endTime = parsedArgs.get(7);
+            endTimeAmPm = parsedArgs.get(8).toUpperCase();
+
+            String fullStartDateTime = (startDate + ' ' + startTime + ' ' + startTimeAmPm);
+            String fullEndDateTime = (endDate + ' ' + endTime + ' ' + endTimeAmPm);
+
+            Date start = validateAndReturnDateTime(fullStartDateTime);
+            Date end = validateAndReturnDateTime(fullEndDateTime);
+
+            PhoneCall call = new PhoneCall(callerNumber, calleeNumber, start, end);
+
+            call.validatePhoneNumber(callerNumber);
+            call.validatePhoneNumber(calleeNumber);
+            call.validateStartEndTimes(fullStartDateTime, fullEndDateTime);
+
+            if (foundOptions) {
+                implementOptions(options, call);
+            }
+
+            client.addPhoneCall(customer, call);
+
+            String response;
+
+            try {
+                // Print all phone calls in a phone bill
+                response = client.getPrettyPhoneBill(customer);
+
+            } catch (IOException ex) {
+                System.err.println("Status Code: 404\nError while contacting server");
+                return;
+            }
+
+            System.out.println(response);
         }
-
-//        if (bill == null) {
-//            bill = new PhoneBill(customer);
-//        }
-//        bill.addPhoneCall(call);
-
-
-        PhoneBillRestClient client = new PhoneBillRestClient(host, port);
-
-        client.addPhoneCall(customer, call);
-
-        String response;
-        try {
-            // Print all phone calls in a phone bill
-            response = client.getPrettyPhoneBill(customer);
-
-        } catch ( IOException ex ) {
-            System.err.println("Status Code: 404\nError while contacting server");
-            return;
-        }
-
-        System.out.println(response);
-
 
         System.exit(0);
     }
@@ -151,13 +188,24 @@ public class Project4 {
             System.err.println("Missing all command line arguments");
             System.exit(1);
         }
-        if (parsedArgs.size() > 1 && parsedArgs.size() < 9) {
-            System.err.println("Missing one or more command line arguments");
-            System.exit(1);
-        }
-        if (parsedArgs.size() > 9) {
-            System.err.println("Too many command line arguments");
-            System.exit(1);
+        if (searchOn) {
+            if (parsedArgs.size() > 1 && parsedArgs.size() < 7) {
+                System.err.println("Missing one or more command line arguments");
+                System.exit(1);
+            }
+            if (parsedArgs.size() > 7) {
+                System.err.println("Too many command line arguments");
+                System.exit(1);
+            }
+        } else {
+            if (parsedArgs.size() > 1 && parsedArgs.size() < 9) {
+                System.err.println("Missing one or more command line arguments");
+                System.exit(1);
+            }
+            if (parsedArgs.size() > 9) {
+                System.err.println("Too many command line arguments");
+                System.exit(1);
+            }
         }
     }
 
@@ -186,7 +234,7 @@ public class Project4 {
         System.exit(0);
     }
 
-    private static Date validateAndReturnEndDateTime(String dateTime) {
+    public static Date validateAndReturnDateTime(String dateTime) {
         try {
             SimpleDateFormat formatter1 = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
             SimpleDateFormat formatter2 = new SimpleDateFormat("MM/dd/yyyy h:mm a");
@@ -247,5 +295,14 @@ public class Project4 {
                 return;
             }
         }
+    }
+
+    private static boolean isSearchOption(String[] args) {
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].equals("-search")) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -87,4 +87,8 @@ public class Messages
         return map;
     }
 
+    public static String returnedEmptyPhoneBill() {
+        return "Query returns no phone calls";
+    }
+
 }

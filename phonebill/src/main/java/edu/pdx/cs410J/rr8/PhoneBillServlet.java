@@ -8,6 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,8 +27,8 @@ public class PhoneBillServlet extends HttpServlet
     static final String CUSTOMER_PARAMETER = "customer";
     private static final String CALLER_PARAMETER = "caller";
     private static final String CALLEE_PARAMETER = "callee";
-    private static final String START_TIME_PARAMETER = "startTime";
-    private static final String END_TIME_PARAMETER = "endTime";
+    static final String START_TIME_PARAMETER = "startTime";
+    static final String END_TIME_PARAMETER = "endTime";
 
     private final Map<String, String> dictionary = new HashMap<>();
     private Map<String, PhoneBill> bills = new HashMap<>();
@@ -41,7 +45,20 @@ public class PhoneBillServlet extends HttpServlet
         response.setContentType( "text/plain" );
 
         String customer = getParameter(CUSTOMER_PARAMETER, request );
-        writePrettyPhoneBill(customer, response);
+
+        String startTime = getParameter(START_TIME_PARAMETER, request);
+        String endTime = getParameter(END_TIME_PARAMETER, request);
+
+        if (startTime != null && endTime != null) {
+            try {
+                writePrettyPhoneBillWithinRange(customer, startTime, endTime, response);
+            } catch (ParseException e) {
+                System.err.println("Phone Bill parsing error");
+                System.exit(1);
+            }
+        } else {
+            writePrettyPhoneBill(customer, response);
+        }
     }
 
     private void writePrettyPhoneBill(String customer, HttpServletResponse response) throws IOException {
@@ -53,6 +70,33 @@ public class PhoneBillServlet extends HttpServlet
             PrintWriter writer = response.getWriter();
             PrettyPrinter pretty = new PrettyPrinter(writer);
             pretty.dump(bill);
+            response.setStatus(HttpServletResponse.SC_OK);
+        }
+    }
+
+    private void writePrettyPhoneBillWithinRange(String customer, String startTime, String endTime, HttpServletResponse response) throws IOException, ParseException {
+        PhoneBill bill = getPhoneBill(customer);
+        if (bill == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        } else {
+            DateFormat originalFormat = new SimpleDateFormat("MM/dd/yyyy h:mm a");
+            Date start1 = originalFormat.parse(startTime);
+            Date end1 = originalFormat.parse(endTime);
+            Collection<PhoneCall> calls = bill.getPhoneCalls();
+            PhoneBill editedBill = new PhoneBill(customer);
+            for (PhoneCall call : calls) {
+                if (call.getStartTime().after(start1) && call.getEndTime().before(end1)) {
+                    editedBill.addPhoneCall(call);
+                }
+            }
+            if (editedBill.getPhoneCalls().isEmpty()) {
+                response.setStatus(HttpServletResponse.SC_OK);
+                Messages.returnedEmptyPhoneBill();
+
+            }
+            PrintWriter writer = response.getWriter();
+            PrettyPrinter pretty = new PrettyPrinter(writer);
+            pretty.dump(editedBill);
             response.setStatus(HttpServletResponse.SC_OK);
         }
     }

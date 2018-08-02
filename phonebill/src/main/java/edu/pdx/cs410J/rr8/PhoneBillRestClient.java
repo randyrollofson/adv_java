@@ -4,6 +4,7 @@ import com.google.common.annotations.VisibleForTesting;
 import edu.pdx.cs410J.web.HttpRequestHelper;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 
 import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
 import static java.net.HttpURLConnection.HTTP_OK;
@@ -37,6 +38,16 @@ public class PhoneBillRestClient extends HttpRequestHelper
      */
     public String getPrettyPhoneBill(String customerName) throws IOException {
         Response response = get(this.url, "customer", customerName);
+
+        throwExceptionIfNotOkayHttpStatus(response);
+
+        return response.getContent();
+    }
+
+    public String getCallsWithinRange(String customerName, String startTime, String endTime) throws IOException {
+        //String startTimeUrlEncoded = URLEncoder.encode(startTime, "UTF-8");
+        //String endTimeUrlEncoded = URLEncoder.encode(endTime, "UTF-8");
+        Response response = get(this.url, "customer", customerName, "startTime", startTime, "endTime", endTime);
 
         throwExceptionIfNotOkayHttpStatus(response);
 
