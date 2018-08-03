@@ -178,9 +178,7 @@ public class Project4 {
                     i++;
                 }
             } else {
-                if (!args[i].equals("edu.pdx.cs410J.rr8.Project4")) {
                     parsedArgs.add(args[i]);
-                }
             }
         }
         if (options.isEmpty()) {
