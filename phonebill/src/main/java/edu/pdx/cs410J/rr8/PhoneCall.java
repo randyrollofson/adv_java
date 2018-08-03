@@ -108,28 +108,28 @@ public class PhoneCall extends AbstractPhoneCall {
         }
     }
 
-    /**
-     * Checks that the start date/time is before end date/time
-     * @param fullStartDateTime
-     *        start date/time string
-     * @param fullEndDateTime
-     *        end date/time string
-     */
-    public void validateStartEndTimes(String fullStartDateTime, String fullEndDateTime) {
-        try {
-            SimpleDateFormat formatter = new SimpleDateFormat("M/d/yy h:mm a");
-            Date start = formatter.parse(fullStartDateTime);
-            Date end = formatter.parse(fullEndDateTime);
-
-            if (start.after(end)) {
-                System.err.println("Error: Start date/time is after End date/time");
-                System.exit(1);
-            }
-        } catch (ParseException e){
-            System.err.println("Date/time parsing error");
-            System.exit(1);
-        }
-    }
+//    /**
+//     * Checks that the start date/time is before end date/time
+//     * @param fullStartDateTime
+//     *        start date/time string
+//     * @param fullEndDateTime
+//     *        end date/time string
+//     */
+//    public void validateStartEndTimes(String fullStartDateTime, String fullEndDateTime) {
+//        try {
+//            SimpleDateFormat formatter = new SimpleDateFormat("M/d/yy h:mm a");
+//            Date start = formatter.parse(fullStartDateTime);
+//            Date end = formatter.parse(fullEndDateTime);
+//
+//            if (start.after(end)) {
+//                System.err.println("Error: Start date/time is after End date/time");
+//                System.exit(1);
+//            }
+//        } catch (ParseException e){
+//            System.err.println("Date/time parsing error");
+//            System.exit(1);
+//        }
+//    }
 
     /**
      * Sets the duration of the call in minutes

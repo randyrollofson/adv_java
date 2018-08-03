@@ -95,6 +95,7 @@ public class Project4 {
             endTimeAmPm = parsedArgs.get(6).toUpperCase();
             String fullStartDateTime = (startDate + ' ' + startTime + ' ' + startTimeAmPm);
             String fullEndDateTime = (endDate + ' ' + endTime + ' ' + endTimeAmPm);
+            validateStartEndTimes(fullStartDateTime, fullEndDateTime);
 
             String response = null;
 
@@ -129,7 +130,7 @@ public class Project4 {
 
             call.validatePhoneNumber(callerNumber);
             call.validatePhoneNumber(calleeNumber);
-            call.validateStartEndTimes(fullStartDateTime, fullEndDateTime);
+            validateStartEndTimes(fullStartDateTime, fullEndDateTime);
 
             if (foundOptions) {
                 implementOptions(options, call);
@@ -305,5 +306,21 @@ public class Project4 {
             }
         }
         return false;
+    }
+
+    private static void validateStartEndTimes(String fullStartDateTime, String fullEndDateTime) {
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat("M/d/yy h:mm a");
+            Date start = formatter.parse(fullStartDateTime);
+            Date end = formatter.parse(fullEndDateTime);
+
+            if (start.after(end)) {
+                System.err.println("Error: Start date/time is after End date/time");
+                System.exit(1);
+            }
+        } catch (ParseException e){
+            System.err.println("Date/time parsing error");
+            System.exit(1);
+        }
     }
 }
