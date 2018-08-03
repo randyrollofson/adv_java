@@ -3,8 +3,6 @@ package edu.pdx.cs410J.rr8;
 import edu.pdx.cs410J.AbstractPhoneCall;
 
 import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -61,9 +59,14 @@ public class PhoneCall extends AbstractPhoneCall {
     @Override
     public String getStartTimeString() {
         return formatDate(this.startTime);
-        //return "Start Time";
     }
 
+    /**
+     * Formats date to SHORT
+     * @param date
+     *        date object
+     * @return formatted date as string
+     */
     private String formatDate(Date date) {
         return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(date);
     }
@@ -78,11 +81,19 @@ public class PhoneCall extends AbstractPhoneCall {
         //return "End Time";
     }
 
+    /**
+     * Ruturns start time
+     * @return start time date
+     */
     @Override
     public Date getStartTime() {
         return this.startTime;
     }
 
+    /**
+     * Returns end time
+     * @return end time date
+     */
     @Override
     public Date getEndTime() {
         return this.endTime;
@@ -108,34 +119,7 @@ public class PhoneCall extends AbstractPhoneCall {
         }
     }
 
-//    /**
-//     * Checks that the start date/time is before end date/time
-//     * @param fullStartDateTime
-//     *        start date/time string
-//     * @param fullEndDateTime
-//     *        end date/time string
-//     */
-//    public void validateStartEndTimes(String fullStartDateTime, String fullEndDateTime) {
-//        try {
-//            SimpleDateFormat formatter = new SimpleDateFormat("M/d/yy h:mm a");
-//            Date start = formatter.parse(fullStartDateTime);
-//            Date end = formatter.parse(fullEndDateTime);
-//
-//            if (start.after(end)) {
-//                System.err.println("Error: Start date/time is after End date/time");
-//                System.exit(1);
-//            }
-//        } catch (ParseException e){
-//            System.err.println("Date/time parsing error");
-//            System.exit(1);
-//        }
-//    }
-
     /**
      * Sets the duration of the call in minutes
      */
-//    public void setCallDuration() {
-//        long temp = endDateTime.getTime() - startDateTime.getTime();
-//        callDuration = temp / (60 * 1000);
-//    }
 }

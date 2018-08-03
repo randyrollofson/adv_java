@@ -28,6 +28,13 @@ public class Project4 {
     public static boolean searchOn = false;
 
 
+    /**
+     * Project 4 main method
+     * @param args
+     *        command line arguments
+     * @throws IOException
+     *         thrown if there is an error connecting to the server
+     */
     public static void main(String[] args) throws IOException {
         if (args.length != 0 && args[0].equals("-README")) {
             displayReadme();
@@ -244,6 +251,13 @@ public class Project4 {
         System.exit(0);
     }
 
+    /**
+     * Validates a date string and converts it to a date object
+     * @param dateTime
+     *        full date/time string
+     * @return
+     *        returns formatted date object
+     */
     public static Date validateAndReturnDateTime(String dateTime) {
         try {
             SimpleDateFormat formatter1 = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
@@ -270,6 +284,11 @@ public class Project4 {
         return null;
     }
 
+    /**
+     * Validates the host command line arg
+     * @param args
+     *        command line arguments
+     */
     private static void validateHostOption(String[] args) {
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("-host")) {
@@ -284,6 +303,11 @@ public class Project4 {
         }
     }
 
+    /**
+     * Validates the port command line argument
+     * @param args
+     *        command line arguments
+     */
     private static void validatePortOption(String[] args) {
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("-port")) {
@@ -299,6 +323,13 @@ public class Project4 {
         }
     }
 
+    /**
+     * Returns boolean of search option
+     * @param args
+     *        command line args
+     * @return
+     *        returns true/false if -search option is specified
+     */
     private static boolean isSearchOption(String[] args) {
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("-search")) {
@@ -308,6 +339,13 @@ public class Project4 {
         return false;
     }
 
+    /**
+     * Checks if start is before/after end time
+     * @param fullStartDateTime
+     *        date/time string
+     * @param fullEndDateTime
+     *        date/time string
+     */
     private static void validateStartEndTimes(String fullStartDateTime, String fullEndDateTime) {
         try {
             SimpleDateFormat formatter = new SimpleDateFormat("M/d/yy h:mm a");

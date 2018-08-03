@@ -43,6 +43,18 @@ public class PhoneBillRestClient extends HttpRequestHelper
         return response.getContent();
     }
 
+    /**
+     * Returns all phone calls within a given range
+     * @param customerName
+     *        customer name of the phone bill
+     * @param startTime
+     *        start time range
+     * @param endTime
+     *        end time range
+     * @return all phone calls that occur within the given range
+     * @throws IOException
+     *         thrown if there is a problem connecting to server
+     */
     public String getCallsWithinRange(String customerName, String startTime, String endTime) throws IOException {
         Response response = get(this.url, "customer", customerName, "startTime", startTime, "endTime", endTime);
 
@@ -51,6 +63,15 @@ public class PhoneBillRestClient extends HttpRequestHelper
         return response.getContent();
     }
 
+    /**
+     * Adds a phone call to a phone bill
+     * @param customerName
+     *        customer name on the phone bill
+     * @param call
+     *        call to add
+     * @throws IOException
+     *         thrown if there is a problem connecting to server
+     */
     public void addPhoneCall(String customerName, PhoneCall call) throws IOException {
         String [] postParameters = {
             "customer", customerName,
@@ -64,16 +85,35 @@ public class PhoneBillRestClient extends HttpRequestHelper
         throwExceptionIfNotOkayHttpStatus(response);
     }
 
+    /**
+     * Calls post http method
+     * @param postParameters
+     *        phone call data
+     * @return http resonse form server
+     * @throws IOException
+     *         thrown if there is a problem connecting to server
+     */
     @VisibleForTesting
     Response postToMyURL(String... postParameters) throws IOException {
       return post(this.url, postParameters);
     }
 
+    /**
+     * Removes all phone bills
+     * @throws IOException
+     *         thrown if there is a problem connecting to server
+     */
     public void removeAllPhoneBills() throws IOException {
       Response response = delete(this.url);
       throwExceptionIfNotOkayHttpStatus(response);
     }
 
+    /**
+     * Checks the http response status
+     * @param response
+     *        http response from server
+     * @return http status code
+     */
     private Response throwExceptionIfNotOkayHttpStatus(Response response) {
         int code = response.getCode();
         if (code == HTTP_NOT_FOUND) {
@@ -90,9 +130,9 @@ public class PhoneBillRestClient extends HttpRequestHelper
         return response;
     }
 
-    private class PhoneBillRestException extends RuntimeException {
-      public PhoneBillRestException(int httpStatusCode) {
-        super("Got an HTTP Status Code of " + httpStatusCode);
-      }
-    }
+//    private class PhoneBillRestException extends RuntimeException {
+//      public PhoneBillRestException(int httpStatusCode) {
+//        super("Got an HTTP Status Code of " + httpStatusCode);
+//      }
+//    }
 }

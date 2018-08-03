@@ -63,6 +63,15 @@ public class PhoneBillServlet extends HttpServlet
         }
     }
 
+    /**
+     * Writes a phone bill w/ all calls
+     * @param customer
+     *        customer name on phone bill
+     * @param response
+     *        http response from server
+     * @throws IOException
+     *         thrown if there is a problem connecting to the server
+     */
     private void writePrettyPhoneBill(String customer, HttpServletResponse response) throws IOException {
         PhoneBill bill = getPhoneBill(customer);
         if (bill == null) {
@@ -76,6 +85,21 @@ public class PhoneBillServlet extends HttpServlet
         }
     }
 
+    /**
+     * Writes all calls from a phone bill that occur within a given range
+     * @param customer
+     *        customer name on the phone bill
+     * @param startTime
+     *         start time range
+     * @param endTime
+     *         end time range
+     * @param response
+     *        http response form server
+     * @throws IOException
+     *         thrown if there is a problem connecting to the server
+     * @throws ParseException
+     *         thrown if there is a date parsing error
+     */
     private void writePrettyPhoneBillWithinRange(String customer, String startTime, String endTime, HttpServletResponse response) throws IOException, ParseException {
         PhoneBill bill = getPhoneBill(customer);
         if (bill == null) {
@@ -188,11 +212,22 @@ public class PhoneBillServlet extends HttpServlet
       }
     }
 
+    /**
+     * Gets a phone bill
+     * @param customer
+     *        customer name on phone bill
+     * @return phone bill
+     */
     @VisibleForTesting
     PhoneBill getPhoneBill(String customer) {
         return this.bills.get(customer);
     }
 
+    /**
+     * Adds a phone call
+     * @param bill
+     *        phone bill to add call to
+     */
     @VisibleForTesting
     void addPhoneBill(PhoneBill bill) {
         this.bills.put(bill.getCustomer(), bill);
