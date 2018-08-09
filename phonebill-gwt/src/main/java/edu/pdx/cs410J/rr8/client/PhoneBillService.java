@@ -9,19 +9,21 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("phoneBill")
 public interface PhoneBillService extends RemoteService {
 
-  /**
-   * Returns the a dummy Phone Bill
-   */
-  public PhoneBill getPhoneBill();
+    public PhoneBill addPhoneCall();
 
-  /**
-   * Always throws an undeclared exception so that we can see GWT handles it.
-   */
-  void throwUndeclaredException();
+    /**
+     * Returns the a dummy Phone Bill
+     */
+    public PhoneBill getPhoneBill();
 
-  /**
-   * Always throws a declared exception so that we can see GWT handles it.
-   */
-  void throwDeclaredException() throws IllegalStateException;
+    /**
+     * Always throws an undeclared exception so that we can see GWT handles it.
+     */
+    void throwUndeclaredException();
+
+    /**
+     * Always throws a declared exception so that we can see GWT handles it.
+     */
+    void throwDeclaredException() throws IllegalStateException;
 
 }

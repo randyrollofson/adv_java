@@ -8,35 +8,40 @@ import edu.pdx.cs410J.rr8.client.PhoneBillService;
 /**
  * The server-side implementation of the Phone Bill service
  */
-public class PhoneBillServiceImpl extends RemoteServiceServlet implements PhoneBillService
-{
-  @Override
-  public PhoneBill getPhoneBill() {
-    PhoneBill phonebill = new PhoneBill();
-    phonebill.addPhoneCall(new PhoneCall());
-    return phonebill;
-  }
+public class PhoneBillServiceImpl extends RemoteServiceServlet implements PhoneBillService {
+    @Override
+    public PhoneBill addPhoneCall() {
+        PhoneBill phonebill = new PhoneBill();
+        phonebill.addPhoneCall(new PhoneCall());
+        return phonebill;
+    }
 
-  @Override
-  public void throwUndeclaredException() {
-    throw new IllegalStateException("Expected undeclared exception");
-  }
+    @Override
+    public PhoneBill getPhoneBill() {
+        PhoneBill phonebill = new PhoneBill();
+        phonebill.addPhoneCall(new PhoneCall());
+        return phonebill;
+    }
 
-  @Override
-  public void throwDeclaredException() throws IllegalStateException {
-    throw new IllegalStateException("Expected declared exception");
-  }
+    @Override
+    public void throwUndeclaredException() {
+        throw new IllegalStateException("Expected undeclared exception");
+    }
 
-  /**
-   * Log unhandled exceptions to standard error
-   *
-   * @param unhandled
-   *        The exception that wasn't handled
-   */
-  @Override
-  protected void doUnexpectedFailure(Throwable unhandled) {
-    unhandled.printStackTrace(System.err);
-    super.doUnexpectedFailure(unhandled);
-  }
+    @Override
+    public void throwDeclaredException() throws IllegalStateException {
+        throw new IllegalStateException("Expected declared exception");
+    }
+
+    /**
+     * Log unhandled exceptions to standard error
+     *
+     * @param unhandled The exception that wasn't handled
+     */
+    @Override
+    protected void doUnexpectedFailure(Throwable unhandled) {
+        unhandled.printStackTrace(System.err);
+        super.doUnexpectedFailure(unhandled);
+    }
 
 }
