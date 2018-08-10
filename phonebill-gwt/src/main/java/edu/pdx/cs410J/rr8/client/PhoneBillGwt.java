@@ -11,9 +11,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 
-import java.text.*;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,6 +42,9 @@ public class PhoneBillGwt implements EntryPoint {
 
     @VisibleForTesting
     Button showPhoneBillButton;
+
+    @VisibleForTesting
+    Button searchButton;
 
     public PhoneBillGwt() {
         this(new Alerter() {
@@ -118,9 +119,19 @@ public class PhoneBillGwt implements EntryPoint {
             }
         });
 
+        searchButton = new Button("Search Phone Bill");
+        searchButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent clickEvent) {
+                searchButton.setEnabled(false);
+                searchPhoneBill();
+            }
+        });
+
         panel.add(readMeButton);
         panel.add(addPhoneCallButton);
         panel.add(showPhoneBillButton);
+        panel.add(searchButton);
     }
 
     private void displayReadMe() {
@@ -256,13 +267,13 @@ public class PhoneBillGwt implements EntryPoint {
                     return;
                 }
 
-                Date startDateTime = new Date();
-                if (!isValidateDateTime(fullStartDateTime, startDateTime)) {
+                Date startDateTime = isValidateDateTime(fullStartDateTime);
+                if (startDateTime == null) {
                     return;
                 }
 
-                Date endDateTime = new Date();
-                if (!isValidateDateTime(fullEndDateTime, endDateTime)) {
+                Date endDateTime = isValidateDateTime(fullEndDateTime);
+                if (endDateTime == null) {
                     return;
                 }
 
@@ -337,10 +348,160 @@ public class PhoneBillGwt implements EntryPoint {
                     public void onSuccess(PhoneBill phoneBill) {
                         if (phoneBill == null) {
                             alerter.alert("No phone bill found with that customer name");
+                            showPhoneBillButton.setEnabled(true);
                         } else {
                             StringBuilder sb = new StringBuilder(phoneBill.toString());
                             sb.append("\n\n");
                             Collection<PhoneCall> calls = phoneBill.getPhoneCalls();
+                            for (PhoneCall call : calls) {
+                                sb.append(call.toString());
+                                sb.append("\n");
+                            }
+
+                            TextArea ta = new TextArea();
+                            ta.setCharacterWidth(100);
+                            ta.setVisibleLines(20);
+                            ta.setText(sb.toString());
+                            panel.add(ta);
+
+                            Button okButton = new Button("OK");
+                            okButton.addClickHandler(new ClickHandler() {
+                                @Override
+                                public void onClick(ClickEvent event) {
+                                    showPhoneBillButton.setEnabled(true);
+                                    panel.remove(ta);
+                                    panel.remove(okButton);
+                                }
+                            });
+                            panel.add(okButton);
+                        }
+                        panel.remove(flexTable);
+                    }
+                });
+            }
+
+        });
+        flexTable.setWidget(2, 1, submit);
+
+        panel.add(flexTable);
+    }
+
+    private void searchPhoneBill() {
+        logger.info("Calling searchPhoneBill");
+
+        FlexTable flexTable = new FlexTable();
+        FlexTable.FlexCellFormatter formatter = flexTable.getFlexCellFormatter();
+        flexTable.setCellSpacing(10);
+        formatter.setColSpan(0, 0, 2);
+
+        Label header = new Label("Please enter search options below:");
+        flexTable.setWidget(0, 0, header);
+
+        Label customerNameLabel = new Label("Customer Name:");
+        flexTable.setWidget(1, 0, customerNameLabel);
+        TextBox customerNameBox = new TextBox();
+        customerNameBox.getElement().setPropertyString("placeholder", "Customer Name");
+        flexTable.setWidget(1, 1, customerNameBox);
+
+        Label startDateLabel = new Label("Start Date:");
+        flexTable.setWidget(2, 0, startDateLabel);
+        TextBox startDateBox = new TextBox();
+        startDateBox.getElement().setPropertyString("placeholder", "MM/DD/YYYY");
+        flexTable.setWidget(2, 1, startDateBox);
+
+        Label startTimeLabel = new Label("Start Time:");
+        flexTable.setWidget(3, 0, startTimeLabel);
+        TextBox startTimeBox = new TextBox();
+        startTimeBox.getElement().setPropertyString("placeholder", "H:MM am/pm");
+        flexTable.setWidget(3, 1, startTimeBox);
+
+        Label endDateLabel = new Label("End Date:");
+        flexTable.setWidget(4, 0, endDateLabel);
+        TextBox endDateBox = new TextBox();
+        endDateBox.getElement().setPropertyString("placeholder", "MM/DD/YYYY");
+        flexTable.setWidget(4, 1, endDateBox);
+
+        Label endTimeLabel = new Label("End Time:");
+        flexTable.setWidget(5, 0, endTimeLabel);
+        TextBox endTimeBox = new TextBox();
+        endTimeBox.getElement().setPropertyString("placeholder", "H:MM am/pm");
+        flexTable.setWidget(5, 1, endTimeBox);
+
+        Button cancel = new Button("Cancel");
+        cancel.addClickHandler(new ClickHandler () {
+            @Override
+            public void onClick(ClickEvent clickEvent) {
+                searchButton.setEnabled(true);
+                panel.remove(flexTable);
+            }
+        });
+        flexTable.setWidget(6, 0, cancel);
+
+        Button submit = new Button("Submit");
+        submit.addClickHandler(new ClickHandler () {
+            @Override
+            public void onClick(ClickEvent clickEvent) {
+                searchButton.setEnabled(false);
+
+                String customerName = customerNameBox.getText();
+                String startDate = startDateBox.getText();
+                String startTime = startTimeBox.getText();
+                startTime = startTime.substring(0, startTime.length() - 2) + startTime.substring(startTime.length() - 2).toUpperCase();
+                String endDate = endDateBox.getText();
+                String endTime = endTimeBox.getText();
+                endTime = endTime.substring(0, endTime.length() - 2) + endTime.substring(endTime.length() - 2).toUpperCase();
+
+                if (customerName.isEmpty()) {
+                    alerter.alert("Customer Name field is empty");
+                    return;
+                } else if (startDate.isEmpty()) {
+                    alerter.alert("Start Date field is empty");
+                    return;
+                } else if (startTime.isEmpty()) {
+                    alerter.alert("Start Time field is empty");
+                    return;
+                } else if (endDate.isEmpty()) {
+                    alerter.alert("End Date field is empty");
+                    return;
+                } else if (endTime.isEmpty()) {
+                    alerter.alert("End Time field is empty");
+                    return;
+                }
+
+                String fullStartDateTime = (startDate + ' ' + startTime);
+                String fullEndDateTime = (endDate + ' ' + endTime);
+
+                Date startDateTime = isValidateDateTime(fullStartDateTime);
+                if (startDateTime == null) {
+                    return;
+                }
+
+                Date endDateTime = isValidateDateTime(fullEndDateTime);
+                if (endDateTime == null) {
+                    return;
+                }
+
+                if (!isValidateStartEndTimes(fullStartDateTime, fullEndDateTime)) {
+                    return;
+                }
+
+                panel.remove(flexTable);
+
+                phoneBillService.searchPhoneBill(customerName, startDateTime, endDateTime, new AsyncCallback<PhoneBill>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        alerter.alert("Error during phone bill search");
+                    }
+
+                    @Override
+                    public void onSuccess(PhoneBill searchedBill) {
+                        if (searchedBill == null) {
+                            alerter.alert("No phone bill found with that customer name");
+                            searchButton.setEnabled(true);
+                        } else {
+                            StringBuilder sb = new StringBuilder(searchedBill.toString());
+                            sb.append("\n\n");
+                            Collection<PhoneCall> calls = searchedBill.getPhoneCalls();
                             for (PhoneCall call : calls) {
                                 sb.append(call);
                                 sb.append("\n");
@@ -356,23 +517,21 @@ public class PhoneBillGwt implements EntryPoint {
                             okButton.addClickHandler(new ClickHandler() {
                                 @Override
                                 public void onClick(ClickEvent event) {
-                                    readMeButton.setEnabled(true);
+                                    searchButton.setEnabled(true);
                                     panel.remove(ta);
                                     panel.remove(okButton);
                                 }
                             });
                             panel.add(okButton);
-
-                            //alerter.alert(sb.toString());
                         }
-                        showPhoneBillButton.setEnabled(true);
                         panel.remove(flexTable);
                     }
                 });
-            }
 
+
+            }
         });
-        flexTable.setWidget(2, 1, submit);
+        flexTable.setWidget(6, 1, submit);
 
         panel.add(flexTable);
     }
@@ -462,28 +621,27 @@ public class PhoneBillGwt implements EntryPoint {
 
     /**
      * Validates a date string and converts it to a date object
-     * @param dateTime
+     * @param dateTimeString
      *        full date/time string
      * @return
      *        returns formatted date object
      */
-    public boolean isValidateDateTime(String dateTimeString, Date dateTime) {
+    public Date isValidateDateTime(String dateTimeString) {
         try {
             DateTimeFormat formatter = DateTimeFormat.getFormat("MM/dd/yyyy h:mm a");
             Date date = formatter.parse(dateTimeString);
 
             if (formatter.format(date).equals(dateTimeString)) {
-                dateTime = date;
+                return date;
             } else {
                 alerter.alert("Incorrect date/time format. \nExpected date format: MM/DD/YYYY. \nExpected time format: H:MM am/pm.");
-                return false;
             }
         } catch (Exception e){
             alerter.alert("Date parsing error");
-            return false;
+            return null;
         }
 
-        return true;
+        return null;
     }
 
 }

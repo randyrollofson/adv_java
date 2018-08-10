@@ -3,7 +3,6 @@ package edu.pdx.cs410J.rr8.client;
 import edu.pdx.cs410J.AbstractPhoneCall;
 
 import java.lang.Override;
-import java.text.*;
 import java.util.Date;
 import com.google.gwt.i18n.client.DateTimeFormat;
 
@@ -53,22 +52,10 @@ public class PhoneCall extends AbstractPhoneCall {
 
     @Override
     public String getStartTimeString() {
-        String pattern = "M/dd/yy h:mm a";
-        DateTimeFormat dateTimeFormat = DateTimeFormat
-                .getFormat(pattern);
+        String dateString = DateTimeFormat.getFormat("M/dd/yy h:mm a").format(this.startTime);
 
-        //return "START " + getStartTime();
-        return "START " + dateTimeFormat.format(startTime);
+        return dateString;
     }
-
-//    /**
-//     * Returns the date and time that this phone call was originated
-//     * @return The date and time that the call began (12-hour time, SHORT format)
-//     */
-//    @Override
-//    public String getStartTimeString() {
-//        return formatDate(this.startTime);
-//    }
 
     @Override
     public String getCallee() {
@@ -82,31 +69,8 @@ public class PhoneCall extends AbstractPhoneCall {
 
     @Override
     public String getEndTimeString() {
-        String pattern = "M/dd/yy h:mm a";
-        DateTimeFormat dateTimeFormat = DateTimeFormat
-                .getFormat(pattern);
+        String dateString = DateTimeFormat.getFormat("M/dd/yy h:mm a").format(this.endTime);
 
-        //return "END " + getEndTime();
-        return "END " + dateTimeFormat.format(endTime);
+        return dateString;
     }
-
-//    /**
-//     * Returns the date and time that this phone call ended
-//     * @return The date and time that the call ended (12-hour time, SHORT format)
-//     */
-//    @Override
-//    public String getEndTimeString() {
-//        return formatDate(this.endTime);
-//    }
-
-//    /**
-//     * Formats date to SHORT
-//     * @param date
-//     *        date object
-//     * @return formatted date as string
-//     */
-//    private String formatDate(Date date) {
-//        return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(date);
-//    }
-
 }
