@@ -8,6 +8,7 @@ import java.util.Collection;
 
 public class PhoneBill extends AbstractPhoneBill<PhoneCall> {
     private Collection<PhoneCall> calls = new ArrayList<>();
+    private String customerName;
 
     /**
      * In order for GWT to serialize this class (so that it can be sent between
@@ -17,9 +18,19 @@ public class PhoneBill extends AbstractPhoneBill<PhoneCall> {
 
     }
 
+    /**
+     * Creates a new <code>PhoneBill</code>
+     *
+     * @param customerName
+     *        The name of the customer that the phone bill belongs to
+     */
+    public PhoneBill(String customerName) {
+        this.customerName = customerName;
+    }
+
     @Override
     public String getCustomer() {
-        return "CS410J";
+        return customerName;
     }
 
     @Override

@@ -84,7 +84,7 @@ public class PhoneBillGwt implements EntryPoint {
             @Override
             public void onClick(ClickEvent clickEvent) {
                 addPhoneCallButton.setEnabled(false);
-                addPhoneCall();
+                createPhoneCall();
 
             }
         });
@@ -93,6 +93,7 @@ public class PhoneBillGwt implements EntryPoint {
         showPhoneBillButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
+                showPhoneBillButton.setEnabled(false);
                 showPhoneBill();
             }
         });
@@ -101,177 +102,234 @@ public class PhoneBillGwt implements EntryPoint {
         panel.add(showPhoneBillButton);
     }
 
-    private void addPhoneCall() {
-        logger.info("Calling addPhoneCall");
-        phoneBillService.addPhoneCall(new AsyncCallback<PhoneBill>() {
+    private void createPhoneCall() {
+        logger.info("Calling createPhoneCall");
+        FlexTable flexTable = new FlexTable();
+        FlexTable.FlexCellFormatter formatter = flexTable.getFlexCellFormatter();
+        flexTable.setCellSpacing(10);
 
+        formatter.setColSpan(0, 0, 2);
+
+        Label header = new Label("Please enter phone call information below:");
+        flexTable.setWidget(0, 0, header);
+
+        Label customerNameLabel = new Label("Customer Name:");
+        flexTable.setWidget(1, 0, customerNameLabel);
+        TextBox customerNameBox = new TextBox();
+        customerNameBox.getElement().setPropertyString("placeholder", "Customer Name");
+        flexTable.setWidget(1, 1, customerNameBox);
+
+        Label callerNumberLabel = new Label("Caller Number:");
+        flexTable.setWidget(2, 0, callerNumberLabel);
+        TextBox callerNumberBox = new TextBox();
+        callerNumberBox.getElement().setPropertyString("placeholder", "xxx-xxx-xxxx");
+        flexTable.setWidget(2, 1, callerNumberBox);
+
+        Label calleeNumberLabel = new Label("Callee Number:");
+        flexTable.setWidget(3, 0, calleeNumberLabel);
+        TextBox calleeNumberBox = new TextBox();
+        calleeNumberBox.getElement().setPropertyString("placeholder", "xxx-xxx-xxxx");
+        flexTable.setWidget(3, 1, calleeNumberBox);
+
+        Label startDateLabel = new Label("Start Date:");
+        flexTable.setWidget(4, 0, startDateLabel);
+        TextBox startDateBox = new TextBox();
+        startDateBox.getElement().setPropertyString("placeholder", "MM/DD/YYYY");
+        flexTable.setWidget(4, 1, startDateBox);
+
+        Label startTimeLabel = new Label("Start Time:");
+        flexTable.setWidget(5, 0, startTimeLabel);
+        TextBox startTimeBox = new TextBox();
+        startTimeBox.getElement().setPropertyString("placeholder", "HH:MM am/pm");
+        flexTable.setWidget(5, 1, startTimeBox);
+
+        Label endDateLabel = new Label("End Date:");
+        flexTable.setWidget(6, 0, endDateLabel);
+        TextBox endDateBox = new TextBox();
+        endDateBox.getElement().setPropertyString("placeholder", "MM/DD/YYYY");
+        flexTable.setWidget(6, 1, endDateBox);
+
+        Label endTimeLabel = new Label("End Time:");
+        flexTable.setWidget(7, 0, endTimeLabel);
+        TextBox endTimeBox = new TextBox();
+        endTimeBox.getElement().setPropertyString("placeholder", "HH:MM am/pm");
+        flexTable.setWidget(7, 1, endTimeBox);
+
+        Button cancel = new Button("Cancel");
+        cancel.addClickHandler(new ClickHandler () {
             @Override
-            public void onFailure(Throwable ex) {
-                alertOnException(ex);
-            }
-
-            @Override
-            public void onSuccess(PhoneBill phoneBill) {
-                FlexTable flexTable = new FlexTable();
-                FlexTable.FlexCellFormatter formatter = flexTable.getFlexCellFormatter();
-                flexTable.setCellSpacing(10);
-
-                HorizontalPanel linkPanel = new HorizontalPanel();
-                linkPanel.setSpacing(3);
-                flexTable.setWidget(0, 0, linkPanel);
-                formatter.setColSpan(0, 0, 2);
-
-                Label header = new Label("Please enter phone call information below:");
-                flexTable.setWidget(0, 0, header);
-
-                Label customerNameLabel = new Label("Customer Name:");
-                flexTable.setWidget(1, 0, customerNameLabel);
-                TextBox customerNameBox = new TextBox();
-                customerNameBox.getElement().setPropertyString("placeholder", "Customer Name");
-                flexTable.setWidget(1, 1, customerNameBox);
-
-                Label callerNumberLabel = new Label("Caller Number:");
-                flexTable.setWidget(2, 0, callerNumberLabel);
-                TextBox callerNumberBox = new TextBox();
-                callerNumberBox.getElement().setPropertyString("placeholder", "xxx-xxx-xxxx");
-                flexTable.setWidget(2, 1, callerNumberBox);
-
-                Label calleeNumberLabel = new Label("Callee Number:");
-                flexTable.setWidget(3, 0, calleeNumberLabel);
-                TextBox calleeNumberBox = new TextBox();
-                calleeNumberBox.getElement().setPropertyString("placeholder", "xxx-xxx-xxxx");
-                flexTable.setWidget(3, 1, calleeNumberBox);
-
-                Label startDateLabel = new Label("Start Date:");
-                flexTable.setWidget(4, 0, startDateLabel);
-                TextBox startDateBox = new TextBox();
-                startDateBox.getElement().setPropertyString("placeholder", "MM/DD/YYYY");
-                flexTable.setWidget(4, 1, startDateBox);
-
-                Label startTimeLabel = new Label("Start Time:");
-                flexTable.setWidget(5, 0, startTimeLabel);
-                TextBox startTimeBox = new TextBox();
-                startTimeBox.getElement().setPropertyString("placeholder", "HH:MM am/pm");
-                flexTable.setWidget(5, 1, startTimeBox);
-
-                Label endDateLabel = new Label("End Date:");
-                flexTable.setWidget(6, 0, endDateLabel);
-                TextBox endDateBox = new TextBox();
-                endDateBox.getElement().setPropertyString("placeholder", "MM/DD/YYYY");
-                flexTable.setWidget(6, 1, endDateBox);
-
-                Label endTimeLabel = new Label("End Time:");
-                flexTable.setWidget(7, 0, endTimeLabel);
-                TextBox endTimeBox = new TextBox();
-                endTimeBox.getElement().setPropertyString("placeholder", "HH:MM am/pm");
-                flexTable.setWidget(7, 1, endTimeBox);
-
-                Button cancel = new Button("Cancel");
-                cancel.addClickHandler(new ClickHandler () {
-                    @Override
-                    public void onClick(ClickEvent clickEvent) {
-                        addPhoneCallButton.setEnabled(true);
-                        flexTable.removeAllRows();
-                    }
-                });
-
-                flexTable.setWidget(8, 0, cancel);
-
-                Button submit = new Button("Submit");
-                submit.addClickHandler(new ClickHandler () {
-                    @Override
-                    public void onClick(ClickEvent clickEvent) {
-                        addPhoneCallButton.setEnabled(false);
-                        String customerName = customerNameBox.getText();
-                        String callerNumber = callerNumberBox.getText();
-                        String calleeNumber = calleeNumberBox.getText();
-                        String startDate = startDateBox.getText();
-                        String startTime = startTimeBox.getText();
-                        String endDate = endDateBox.getText();
-                        String endTime = endTimeBox.getText();
-
-                        if (customerName.isEmpty()) {
-                            alerter.alert("Customer Name field is empty");
-                            return;
-                        } else if (callerNumber.isEmpty()) {
-                            alerter.alert("Caller Number field is empty");
-                            return;
-                        } else if (calleeNumber.isEmpty()) {
-                            alerter.alert("Callee Number field is empty");
-                            return;
-                        } else if (startDate.isEmpty()) {
-                            alerter.alert("Start Date field is empty");
-                            return;
-                        } else if (startTime.isEmpty()) {
-                            alerter.alert("Start Time field is empty");
-                            return;
-                        } else if (endDate.isEmpty()) {
-                            alerter.alert("End Date field is empty");
-                            return;
-                        } else if (endTime.isEmpty()) {
-                            alerter.alert("End Time field is empty");
-                            return;
-                        }
-
-                        String fullStartDateTime = (startDate + ' ' + startTime);
-                        String fullEndDateTime = (endDate + ' ' + endTime);
-
-                        if (!isValidatePhoneNumber(callerNumber)) {
-                            return;
-                        }
-                        if (!isValidatePhoneNumber(calleeNumber)) {
-                            return;
-                        }
-
-                        Date startDateTime = new Date();
-                        if (!isValidateDateTime(fullStartDateTime, startDateTime)) {
-                            return;
-                        }
-
-                        Date endDateTime = new Date();
-                        if (!isValidateDateTime(fullEndDateTime, endDateTime)) {
-                            return;
-                        }
-
-                        if (!isValidateStartEndTimes(fullStartDateTime, fullEndDateTime)) {
-                            return;
-                        }
-
-                        addPhoneCallButton.setEnabled(true);
-                        flexTable.removeAllRows();
-//                        PhoneCall call = new PhoneCall();
-//                        PhoneCall call = new PhoneCall(callerNumber, calleeNumber, startDateTime, endDateTime);
-                        alerter.alert(customerName);
-                    }
-                });
-
-                flexTable.setWidget(8, 1, submit);
-
-                panel.add(flexTable);
+            public void onClick(ClickEvent clickEvent) {
+                addPhoneCallButton.setEnabled(true);
+                panel.remove(flexTable);
             }
         });
+
+        flexTable.setWidget(8, 0, cancel);
+
+        Button submit = new Button("Submit");
+        submit.addClickHandler(new ClickHandler () {
+            @Override
+            public void onClick(ClickEvent clickEvent) {
+                addPhoneCallButton.setEnabled(false);
+                String customerName = customerNameBox.getText();
+                String callerNumber = callerNumberBox.getText();
+                String calleeNumber = calleeNumberBox.getText();
+                String startDate = startDateBox.getText();
+                String startTime = startTimeBox.getText();
+                startTime = startTime.substring(0, startTime.length() - 2) + startTime.substring(startTime.length() - 2).toUpperCase();
+                String endDate = endDateBox.getText();
+                String endTime = endTimeBox.getText();
+                endTime = endTime.substring(0, endTime.length() - 2) + endTime.substring(endTime.length() - 2).toUpperCase();
+
+                if (customerName.isEmpty()) {
+                    alerter.alert("Customer Name field is empty");
+                    return;
+                } else if (callerNumber.isEmpty()) {
+                    alerter.alert("Caller Number field is empty");
+                    return;
+                } else if (calleeNumber.isEmpty()) {
+                    alerter.alert("Callee Number field is empty");
+                    return;
+                } else if (startDate.isEmpty()) {
+                    alerter.alert("Start Date field is empty");
+                    return;
+                } else if (startTime.isEmpty()) {
+                    alerter.alert("Start Time field is empty");
+                    return;
+                } else if (endDate.isEmpty()) {
+                    alerter.alert("End Date field is empty");
+                    return;
+                } else if (endTime.isEmpty()) {
+                    alerter.alert("End Time field is empty");
+                    return;
+                }
+
+                String fullStartDateTime = (startDate + ' ' + startTime);
+                String fullEndDateTime = (endDate + ' ' + endTime);
+
+                if (!isValidatePhoneNumber(callerNumber)) {
+                    return;
+                }
+                if (!isValidatePhoneNumber(calleeNumber)) {
+                    return;
+                }
+
+                Date startDateTime = new Date();
+                if (!isValidateDateTime(fullStartDateTime, startDateTime)) {
+                    return;
+                }
+
+                Date endDateTime = new Date();
+                if (!isValidateDateTime(fullEndDateTime, endDateTime)) {
+                    return;
+                }
+
+                if (!isValidateStartEndTimes(fullStartDateTime, fullEndDateTime)) {
+                    return;
+                }
+
+                addPhoneCallButton.setEnabled(true);
+                panel.remove(flexTable);
+
+                PhoneCall call = new PhoneCall(callerNumber, calleeNumber, startDateTime, endDateTime);
+                phoneBillService.getPhoneBill(customerName, new AsyncCallback<PhoneBill>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        alerter.alert("Error looking up phone bill");
+                    }
+
+                    @Override
+                    public void onSuccess(PhoneBill phoneBill) {
+                        if (phoneBill == null) {
+                            phoneBillService.createPhoneBill(customerName, new AsyncCallback<PhoneBill>() {
+                                @Override
+                                public void onFailure(Throwable caught) {
+                                    alerter.alert("Error creating new phone bill");
+                                }
+
+                                @Override
+                                public void onSuccess(PhoneBill newPhoneBill) {
+                                    newPhoneBill.addPhoneCall(call);
+                                    alerter.alert("Phone call successfully added");
+                                }
+                            });
+                        } else {
+                            phoneBill.addPhoneCall(call);
+                            alerter.alert("Phone call added to existing phone bill");
+                        }
+                    }
+                });
+            }
+        });
+        flexTable.setWidget(8, 1, submit);
+        panel.add(flexTable);
     }
 
+
     private void showPhoneBill() {
-        logger.info("Calling getPhoneBill");
-        phoneBillService.getPhoneBill(new AsyncCallback<PhoneBill>() {
+        logger.info("Calling showPhoneBill");
 
-            @Override
-            public void onFailure(Throwable ex) {
-                alertOnException(ex);
-            }
+        FlexTable flexTable = new FlexTable();
+        FlexTable.FlexCellFormatter formatter = flexTable.getFlexCellFormatter();
+        flexTable.setCellSpacing(10);
+        formatter.setColSpan(0, 0, 2);
 
+        Label header = new Label("Please enter the customer name below:");
+        flexTable.setWidget(0, 0, header);
+
+        Label customerNameLabel = new Label("Customer Name:");
+        flexTable.setWidget(1, 0, customerNameLabel);
+        TextBox customerNameBox = new TextBox();
+        customerNameBox.getElement().setPropertyString("placeholder", "Customer Name");
+        flexTable.setWidget(1, 1, customerNameBox);
+
+        Button cancel = new Button("Cancel");
+        cancel.addClickHandler(new ClickHandler () {
             @Override
-            public void onSuccess(PhoneBill phoneBill) {
-                StringBuilder sb = new StringBuilder(phoneBill.toString());
-                Collection<PhoneCall> calls = phoneBill.getPhoneCalls();
-                for (PhoneCall call : calls) {
-                    sb.append(call);
-                    sb.append("\n");
-                }
-                alerter.alert(sb.toString());
+            public void onClick(ClickEvent clickEvent) {
+                showPhoneBillButton.setEnabled(true);
+                panel.remove(flexTable);
             }
         });
+        flexTable.setWidget(2, 0, cancel);
+
+        Button submit = new Button("Submit");
+        submit.addClickHandler(new ClickHandler () {
+            @Override
+            public void onClick(ClickEvent clickEvent) {
+                showPhoneBillButton.setEnabled(false);
+
+                String customerName = customerNameBox.getText();
+
+                phoneBillService.getPhoneBill(customerName, new AsyncCallback<PhoneBill>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        alerter.alert("Error retrieving phone bill");
+                    }
+
+                    @Override
+                    public void onSuccess(PhoneBill phoneBill) {
+                        showPhoneBillButton.setEnabled(true);
+                        panel.remove(flexTable);
+                        if (phoneBill == null) {
+                            alerter.alert("No phone bill found with that customer name");
+                        } else {
+                            StringBuilder sb = new StringBuilder(phoneBill.toString());
+                            Collection<PhoneCall> calls = phoneBill.getPhoneCalls();
+                            for (PhoneCall call : calls) {
+                                sb.append(call);
+                                sb.append("\n");
+                            }
+                            alerter.alert(sb.toString());
+                        }
+                    }
+                });
+            }
+
+        });
+        flexTable.setWidget(2, 1, submit);
+
+        panel.add(flexTable);
     }
 
     @Override
@@ -366,18 +424,11 @@ public class PhoneBillGwt implements EntryPoint {
      */
     public boolean isValidateDateTime(String dateTimeString, Date dateTime) {
         try {
-            DateTimeFormat formatter1 = DateTimeFormat.getFormat("MM/dd/yyyy hh:mm a");
-            DateTimeFormat formatter2 = DateTimeFormat.getFormat("MM/dd/yyyy h:mm a");
+            DateTimeFormat formatter = DateTimeFormat.getFormat("MM/dd/yyyy h:mm a");
+            Date date = formatter.parse(dateTimeString);
 
-            Date date1 = formatter1.parse(dateTimeString);
-            Date date2 = formatter2.parse(dateTimeString);
-
-            if (formatter1.format(date1).equals(dateTimeString)) {
-
-                dateTime = date1;
-            } else if (formatter2.format(date2).equals(dateTimeString)) {
-
-                dateTime = date2;
+            if (formatter.format(date).equals(dateTimeString)) {
+                dateTime = date;
             } else {
                 alerter.alert("Incorrect date/time format");
                 return false;

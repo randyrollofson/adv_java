@@ -7,22 +7,10 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public interface PhoneBillServiceAsync {
 
-    void addPhoneCall(AsyncCallback<PhoneBill> async);
-
     /**
-     * Return the current date/time on the server
+     * Returns the a dummy Phone Bill
      */
-    void getPhoneBill(AsyncCallback<PhoneBill> async);
+    void getPhoneBill(String customerName, AsyncCallback<PhoneBill> async);
 
-    /**
-     * Always throws an exception so that we can see how to handle uncaught
-     * exceptions in GWT.
-     */
-    void throwUndeclaredException(AsyncCallback<Void> async);
-
-    /**
-     * Always throws a declared exception so that we can see GWT handles it.
-     */
-    void throwDeclaredException(AsyncCallback<Void> async);
-
+    void createPhoneBill(String customerName, AsyncCallback<PhoneBill> async);
 }

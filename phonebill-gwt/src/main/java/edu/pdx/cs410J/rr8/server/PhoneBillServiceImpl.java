@@ -5,39 +5,32 @@ import edu.pdx.cs410J.rr8.client.PhoneBill;
 import edu.pdx.cs410J.rr8.client.PhoneCall;
 import edu.pdx.cs410J.rr8.client.PhoneBillService;
 
+import java.util.*;
+
 /**
  * The server-side implementation of the Phone Bill service
  */
 public class PhoneBillServiceImpl extends RemoteServiceServlet implements PhoneBillService {
+    private List<PhoneBill> bills = new ArrayList<>();
+
     @Override
-    public PhoneBill addPhoneCall() {
-        PhoneBill phonebill = new PhoneBill();
-        phonebill.addPhoneCall(new PhoneCall());
-        return phonebill;
+    public PhoneBill createPhoneBill(String customerName) {
+        PhoneBill phoneBill = new PhoneBill(customerName);
+        bills.add(phoneBill);
+        return phoneBill;
     }
 
     @Override
-    public PhoneBill getPhoneBill() {
-        PhoneBill phonebill = new PhoneBill();
-        phonebill.addPhoneCall(new PhoneCall());
-        return phonebill;
+    public PhoneBill getPhoneBill(String customerName) {
+        for (PhoneBill bill : bills) {
+            if (bill.getCustomer().equals(customerName)) {
+                return bill;
+            }
+        }
+
+        return null;
     }
 
-    @Override
-    public void throwUndeclaredException() {
-        throw new IllegalStateException("Expected undeclared exception");
-    }
-
-    @Override
-    public void throwDeclaredException() throws IllegalStateException {
-        throw new IllegalStateException("Expected declared exception");
-    }
-
-    /**
-     * Log unhandled exceptions to standard error
-     *
-     * @param unhandled The exception that wasn't handled
-     */
     @Override
     protected void doUnexpectedFailure(Throwable unhandled) {
         unhandled.printStackTrace(System.err);
