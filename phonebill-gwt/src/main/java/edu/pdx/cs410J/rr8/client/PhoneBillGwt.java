@@ -22,11 +22,22 @@ import java.util.logging.Logger;
  * A basic GWT class that makes sure that we can send an Phone Bill back from the server
  */
 public class PhoneBillGwt implements EntryPoint {
+    static final String README = "\nREADME\n\nRandy Rollofson\nProject: phonebill-gwt\n\nThis program manages phone calls which " +
+            "consist of a customer name, caller phone number\n" +
+            "callee phone number, start date/time of a call, end date/time of a call.\n" +
+            "Phone calls are added to a phone bills that can be searched for by customer name.\n\n" +
+            "If an existing bill for a customer is not found, a new bill will be created and added to.\n" +
+            "If the bill already exists for a customer, the phone call is added to the bill.\n" +
+            "Phone bills can also be searched by start and end date/time.";
+
     private final Alerter alerter;
     private final PhoneBillServiceAsync phoneBillService;
     private final Logger logger;
 
     VerticalPanel panel = new VerticalPanel();
+
+    @VisibleForTesting
+    Button readMeButton;
 
     @VisibleForTesting
     Button addPhoneCallButton;
@@ -79,6 +90,15 @@ public class PhoneBillGwt implements EntryPoint {
     }
 
     private void addWidgets(VerticalPanel panel) {
+        readMeButton = new Button("README");
+        readMeButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent clickEvent) {
+                readMeButton.setEnabled(false);
+                displayReadMe();
+
+            }
+        });
         addPhoneCallButton = new Button("Add Phone Call");
         addPhoneCallButton.addClickHandler(new ClickHandler() {
             @Override
@@ -98,8 +118,30 @@ public class PhoneBillGwt implements EntryPoint {
             }
         });
 
+        panel.add(readMeButton);
         panel.add(addPhoneCallButton);
         panel.add(showPhoneBillButton);
+    }
+
+    private void displayReadMe() {
+        logger.info("displayReadMe");
+        TextArea ta = new TextArea();
+        ta.setCharacterWidth(80);
+        ta.setVisibleLines(20);
+        ta.setText(README);
+        panel.add(ta);
+
+        Button okButton = new Button("OK");
+        okButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                readMeButton.setEnabled(true);
+                panel.remove(ta);
+                panel.remove(okButton);
+            }
+        });
+        panel.add(okButton);
+
     }
 
     private void createPhoneCall() {
@@ -140,7 +182,7 @@ public class PhoneBillGwt implements EntryPoint {
         Label startTimeLabel = new Label("Start Time:");
         flexTable.setWidget(5, 0, startTimeLabel);
         TextBox startTimeBox = new TextBox();
-        startTimeBox.getElement().setPropertyString("placeholder", "HH:MM am/pm");
+        startTimeBox.getElement().setPropertyString("placeholder", "H:MM am/pm");
         flexTable.setWidget(5, 1, startTimeBox);
 
         Label endDateLabel = new Label("End Date:");
@@ -152,7 +194,7 @@ public class PhoneBillGwt implements EntryPoint {
         Label endTimeLabel = new Label("End Time:");
         flexTable.setWidget(7, 0, endTimeLabel);
         TextBox endTimeBox = new TextBox();
-        endTimeBox.getElement().setPropertyString("placeholder", "HH:MM am/pm");
+        endTimeBox.getElement().setPropertyString("placeholder", "H:MM am/pm");
         flexTable.setWidget(7, 1, endTimeBox);
 
         Button cancel = new Button("Cancel");
@@ -297,12 +339,31 @@ public class PhoneBillGwt implements EntryPoint {
                             alerter.alert("No phone bill found with that customer name");
                         } else {
                             StringBuilder sb = new StringBuilder(phoneBill.toString());
+                            sb.append("\n\n");
                             Collection<PhoneCall> calls = phoneBill.getPhoneCalls();
                             for (PhoneCall call : calls) {
                                 sb.append(call);
                                 sb.append("\n");
                             }
-                            alerter.alert(sb.toString());
+
+                            TextArea ta = new TextArea();
+                            ta.setCharacterWidth(100);
+                            ta.setVisibleLines(20);
+                            ta.setText(sb.toString());
+                            panel.add(ta);
+
+                            Button okButton = new Button("OK");
+                            okButton.addClickHandler(new ClickHandler() {
+                                @Override
+                                public void onClick(ClickEvent event) {
+                                    readMeButton.setEnabled(true);
+                                    panel.remove(ta);
+                                    panel.remove(okButton);
+                                }
+                            });
+                            panel.add(okButton);
+
+                            //alerter.alert(sb.toString());
                         }
                         showPhoneBillButton.setEnabled(true);
                         panel.remove(flexTable);
@@ -414,7 +475,7 @@ public class PhoneBillGwt implements EntryPoint {
             if (formatter.format(date).equals(dateTimeString)) {
                 dateTime = date;
             } else {
-                alerter.alert("Incorrect date/time format");
+                alerter.alert("Incorrect date/time format. \nExpected date format: MM/DD/YYYY. \nExpected time format: H:MM am/pm.");
                 return false;
             }
         } catch (Exception e){

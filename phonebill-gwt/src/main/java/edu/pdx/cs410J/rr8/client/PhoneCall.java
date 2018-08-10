@@ -53,7 +53,12 @@ public class PhoneCall extends AbstractPhoneCall {
 
     @Override
     public String getStartTimeString() {
-        return "START " + getStartTime();
+        String pattern = "M/dd/yy h:mm a";
+        DateTimeFormat dateTimeFormat = DateTimeFormat
+                .getFormat(pattern);
+
+        //return "START " + getStartTime();
+        return "START " + dateTimeFormat.format(startTime);
     }
 
 //    /**
@@ -77,7 +82,12 @@ public class PhoneCall extends AbstractPhoneCall {
 
     @Override
     public String getEndTimeString() {
-        return "END " + getEndTime();
+        String pattern = "M/dd/yy h:mm a";
+        DateTimeFormat dateTimeFormat = DateTimeFormat
+                .getFormat(pattern);
+
+        //return "END " + getEndTime();
+        return "END " + dateTimeFormat.format(endTime);
     }
 
 //    /**
