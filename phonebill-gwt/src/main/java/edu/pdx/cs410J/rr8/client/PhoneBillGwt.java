@@ -232,31 +232,15 @@ public class PhoneBillGwt implements EntryPoint {
                 panel.remove(flexTable);
 
                 PhoneCall call = new PhoneCall(callerNumber, calleeNumber, startDateTime, endDateTime);
-                phoneBillService.getPhoneBill(customerName, new AsyncCallback<PhoneBill>() {
+                phoneBillService.addPhoneCall(customerName, call, new AsyncCallback<Void>() {
                     @Override
                     public void onFailure(Throwable caught) {
-                        alerter.alert("Error looking up phone bill");
+                        alerter.alert("Error adding phone call");
                     }
 
                     @Override
-                    public void onSuccess(PhoneBill phoneBill) {
-                        if (phoneBill == null) {
-                            phoneBillService.createPhoneBill(customerName, new AsyncCallback<PhoneBill>() {
-                                @Override
-                                public void onFailure(Throwable caught) {
-                                    alerter.alert("Error creating new phone bill");
-                                }
-
-                                @Override
-                                public void onSuccess(PhoneBill newPhoneBill) {
-                                    newPhoneBill.addPhoneCall(call);
-                                    alerter.alert("Phone call successfully added");
-                                }
-                            });
-                        } else {
-                            phoneBill.addPhoneCall(call);
-                            alerter.alert("Phone call added to existing phone bill");
-                        }
+                    public void onSuccess(Void result) {
+                        alerter.alert("Phone call successfully added");
                     }
                 });
             }
@@ -309,8 +293,6 @@ public class PhoneBillGwt implements EntryPoint {
 
                     @Override
                     public void onSuccess(PhoneBill phoneBill) {
-                        showPhoneBillButton.setEnabled(true);
-                        panel.remove(flexTable);
                         if (phoneBill == null) {
                             alerter.alert("No phone bill found with that customer name");
                         } else {
@@ -322,6 +304,8 @@ public class PhoneBillGwt implements EntryPoint {
                             }
                             alerter.alert(sb.toString());
                         }
+                        showPhoneBillButton.setEnabled(true);
+                        panel.remove(flexTable);
                     }
                 });
             }

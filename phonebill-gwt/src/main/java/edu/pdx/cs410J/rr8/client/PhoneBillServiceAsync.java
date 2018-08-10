@@ -12,5 +12,5 @@ public interface PhoneBillServiceAsync {
      */
     void getPhoneBill(String customerName, AsyncCallback<PhoneBill> async);
 
-    void createPhoneBill(String customerName, AsyncCallback<PhoneBill> async);
+    void addPhoneCall(String customerName, PhoneCall call, AsyncCallback<Void> async);
 }

@@ -14,10 +14,16 @@ public class PhoneBillServiceImpl extends RemoteServiceServlet implements PhoneB
     private List<PhoneBill> bills = new ArrayList<>();
 
     @Override
-    public PhoneBill createPhoneBill(String customerName) {
+    public void addPhoneCall(String customerName, PhoneCall call) {
+        for (PhoneBill bill : bills) {
+            if (bill.getCustomer().equals(customerName)) {
+                bill.addPhoneCall(call);
+                return;
+            }
+        }
         PhoneBill phoneBill = new PhoneBill(customerName);
+        phoneBill.addPhoneCall(call);
         bills.add(phoneBill);
-        return phoneBill;
     }
 
     @Override
