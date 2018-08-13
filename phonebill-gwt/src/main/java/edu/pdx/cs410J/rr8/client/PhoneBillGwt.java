@@ -7,7 +7,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.UmbrellaException;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -33,9 +33,6 @@ public class PhoneBillGwt implements EntryPoint {
     private final Logger logger;
 
     VerticalPanel panel = new VerticalPanel();
-
-    @VisibleForTesting
-    Button readMeButton;
 
     @VisibleForTesting
     Button addPhoneCallButton;
@@ -91,15 +88,6 @@ public class PhoneBillGwt implements EntryPoint {
     }
 
     private void addWidgets(VerticalPanel panel) {
-        readMeButton = new Button("README");
-        readMeButton.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent clickEvent) {
-                readMeButton.setEnabled(false);
-                displayReadMe();
-
-            }
-        });
         addPhoneCallButton = new Button("Add Phone Call");
         addPhoneCallButton.addClickHandler(new ClickHandler() {
             @Override
@@ -128,31 +116,29 @@ public class PhoneBillGwt implements EntryPoint {
             }
         });
 
-        panel.add(readMeButton);
-        panel.add(addPhoneCallButton);
-        panel.add(showPhoneBillButton);
-        panel.add(searchButton);
-    }
+        VerticalPanel phoneBillPanel = new VerticalPanel();
+        phoneBillPanel.setSpacing(10);
+        phoneBillPanel.add(addPhoneCallButton);
+        phoneBillPanel.add(showPhoneBillButton);
+        phoneBillPanel.add(searchButton);
 
-    private void displayReadMe() {
-        logger.info("displayReadMe");
+        TabPanel tabPanel = new TabPanel();
+
+        String tab1Title = "Phone Bill";
+        String tab2Title = "Help";
+
+        tabPanel.add(phoneBillPanel, tab1Title);
+
         TextArea ta = new TextArea();
         ta.setCharacterWidth(80);
         ta.setVisibleLines(20);
         ta.setText(README);
-        panel.add(ta);
 
-        Button okButton = new Button("OK");
-        okButton.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                readMeButton.setEnabled(true);
-                panel.remove(ta);
-                panel.remove(okButton);
-            }
-        });
-        panel.add(okButton);
+        tabPanel.add(ta, tab2Title);
+        tabPanel.selectTab(0);
+        tabPanel.setWidth("400");
 
+        panel.add(tabPanel);
     }
 
     private void createPhoneCall() {
@@ -375,7 +361,7 @@ public class PhoneBillGwt implements EntryPoint {
                             });
                             panel.add(okButton);
                         }
-                        panel.remove(flexTable);
+                        //panel.remove(flexTable);
                     }
                 });
             }
