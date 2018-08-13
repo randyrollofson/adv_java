@@ -93,6 +93,8 @@ public class PhoneBillGwt implements EntryPoint {
             @Override
             public void onClick(ClickEvent clickEvent) {
                 addPhoneCallButton.setEnabled(false);
+                showPhoneBillButton.setEnabled(false);
+                searchButton.setEnabled(false);
                 createPhoneCall();
 
             }
@@ -102,7 +104,9 @@ public class PhoneBillGwt implements EntryPoint {
         showPhoneBillButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
+                addPhoneCallButton.setEnabled(false);
                 showPhoneBillButton.setEnabled(false);
+                searchButton.setEnabled(false);
                 showPhoneBill();
             }
         });
@@ -111,6 +115,8 @@ public class PhoneBillGwt implements EntryPoint {
         searchButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
+                addPhoneCallButton.setEnabled(false);
+                showPhoneBillButton.setEnabled(false);
                 searchButton.setEnabled(false);
                 searchPhoneBill();
             }
@@ -199,6 +205,8 @@ public class PhoneBillGwt implements EntryPoint {
             @Override
             public void onClick(ClickEvent clickEvent) {
                 addPhoneCallButton.setEnabled(true);
+                showPhoneBillButton.setEnabled(true);
+                searchButton.setEnabled(true);
                 panel.remove(flexTable);
             }
         });
@@ -209,7 +217,7 @@ public class PhoneBillGwt implements EntryPoint {
         submit.addClickHandler(new ClickHandler () {
             @Override
             public void onClick(ClickEvent clickEvent) {
-                addPhoneCallButton.setEnabled(false);
+//                addPhoneCallButton.setEnabled(false);
                 String customerName = customerNameBox.getText();
                 String callerNumber = callerNumberBox.getText();
                 String calleeNumber = calleeNumberBox.getText();
@@ -266,8 +274,7 @@ public class PhoneBillGwt implements EntryPoint {
                 if (!isValidateStartEndTimes(fullStartDateTime, fullEndDateTime)) {
                     return;
                 }
-
-                addPhoneCallButton.setEnabled(true);
+                
                 panel.remove(flexTable);
 
                 PhoneCall call = new PhoneCall(callerNumber, calleeNumber, startDateTime, endDateTime);
@@ -280,6 +287,9 @@ public class PhoneBillGwt implements EntryPoint {
                     @Override
                     public void onSuccess(Void result) {
                         alerter.alert("Phone call successfully added");
+                        addPhoneCallButton.setEnabled(true);
+                        showPhoneBillButton.setEnabled(true);
+                        searchButton.setEnabled(true);
                     }
                 });
             }
@@ -310,7 +320,9 @@ public class PhoneBillGwt implements EntryPoint {
         cancel.addClickHandler(new ClickHandler () {
             @Override
             public void onClick(ClickEvent clickEvent) {
+                addPhoneCallButton.setEnabled(true);
                 showPhoneBillButton.setEnabled(true);
+                searchButton.setEnabled(true);
                 panel.remove(flexTable);
             }
         });
@@ -320,7 +332,7 @@ public class PhoneBillGwt implements EntryPoint {
         submit.addClickHandler(new ClickHandler () {
             @Override
             public void onClick(ClickEvent clickEvent) {
-                showPhoneBillButton.setEnabled(false);
+//                showPhoneBillButton.setEnabled(false);
 
                 String customerName = customerNameBox.getText();
 
@@ -334,7 +346,6 @@ public class PhoneBillGwt implements EntryPoint {
                     public void onSuccess(PhoneBill phoneBill) {
                         if (phoneBill == null) {
                             alerter.alert("No phone bill found with that customer name");
-                            showPhoneBillButton.setEnabled(true);
                         } else {
                             StringBuilder sb = new StringBuilder(phoneBill.toString());
                             sb.append("\n\n");
@@ -354,18 +365,18 @@ public class PhoneBillGwt implements EntryPoint {
                             okButton.addClickHandler(new ClickHandler() {
                                 @Override
                                 public void onClick(ClickEvent event) {
+                                    addPhoneCallButton.setEnabled(true);
                                     showPhoneBillButton.setEnabled(true);
+                                    searchButton.setEnabled(true);
                                     panel.remove(ta);
                                     panel.remove(okButton);
                                 }
                             });
                             panel.add(okButton);
                         }
-                        //panel.remove(flexTable);
                     }
                 });
             }
-
         });
         flexTable.setWidget(2, 1, submit);
 
@@ -417,6 +428,8 @@ public class PhoneBillGwt implements EntryPoint {
         cancel.addClickHandler(new ClickHandler () {
             @Override
             public void onClick(ClickEvent clickEvent) {
+                addPhoneCallButton.setEnabled(true);
+                showPhoneBillButton.setEnabled(true);
                 searchButton.setEnabled(true);
                 panel.remove(flexTable);
             }
@@ -427,6 +440,8 @@ public class PhoneBillGwt implements EntryPoint {
         submit.addClickHandler(new ClickHandler () {
             @Override
             public void onClick(ClickEvent clickEvent) {
+                addPhoneCallButton.setEnabled(false);
+                showPhoneBillButton.setEnabled(false);
                 searchButton.setEnabled(false);
 
                 String customerName = customerNameBox.getText();
@@ -483,7 +498,6 @@ public class PhoneBillGwt implements EntryPoint {
                     public void onSuccess(PhoneBill searchedBill) {
                         if (searchedBill == null) {
                             alerter.alert("No phone bill found with that customer name");
-                            searchButton.setEnabled(true);
                         } else {
                             StringBuilder sb = new StringBuilder(searchedBill.toString());
                             sb.append("\n\n");
@@ -503,6 +517,8 @@ public class PhoneBillGwt implements EntryPoint {
                             okButton.addClickHandler(new ClickHandler() {
                                 @Override
                                 public void onClick(ClickEvent event) {
+                                    addPhoneCallButton.setEnabled(true);
+                                    showPhoneBillButton.setEnabled(true);
                                     searchButton.setEnabled(true);
                                     panel.remove(ta);
                                     panel.remove(okButton);
@@ -513,8 +529,6 @@ public class PhoneBillGwt implements EntryPoint {
                         panel.remove(flexTable);
                     }
                 });
-
-
             }
         });
         flexTable.setWidget(6, 1, submit);
@@ -539,7 +553,6 @@ public class PhoneBillGwt implements EntryPoint {
 
     private void setupUI() {
         RootPanel rootPanel = RootPanel.get();
-//        VerticalPanel panel = new VerticalPanel();
         panel.setSpacing(10);
         rootPanel.add(panel);
 
