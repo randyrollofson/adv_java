@@ -40,16 +40,28 @@ public class PhoneCall extends AbstractPhoneCall {
         this.endTime = endTime;
     }
 
+    /**
+     * Gets caller number
+     * @return caller number
+     */
     @Override
     public String getCaller() {
         return callerNumber;
     }
 
+    /**
+     * Gets start time
+     * @return start time
+     */
     @Override
     public Date getStartTime() {
         return startTime;
     }
 
+    /**
+     * Gets start time as string
+     * @return start time string
+     */
     @Override
     public String getStartTimeString() {
         String dateString = DateTimeFormat.getFormat("M/dd/yy h:mm a").format(this.startTime);
@@ -57,16 +69,28 @@ public class PhoneCall extends AbstractPhoneCall {
         return dateString;
     }
 
+    /**
+     * Gets callee number
+     * @return callee number
+     */
     @Override
     public String getCallee() {
         return calleeNumber;
     }
 
+    /**
+     * Gets end time
+     * @return end time
+     */
     @Override
     public Date getEndTime() {
         return endTime;
     }
 
+    /**
+     * Gets end time as string
+     * @return end time string
+     */
     @Override
     public String getEndTimeString() {
         String dateString = DateTimeFormat.getFormat("M/dd/yy h:mm a").format(this.endTime);

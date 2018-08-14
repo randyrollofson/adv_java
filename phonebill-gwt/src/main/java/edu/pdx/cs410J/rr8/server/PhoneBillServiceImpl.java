@@ -13,6 +13,13 @@ import java.util.*;
 public class PhoneBillServiceImpl extends RemoteServiceServlet implements PhoneBillService {
     private List<PhoneBill> bills = new ArrayList<>();
 
+    /**
+     * Adds phone call to a phone bill
+     * @param customerName
+     *        name of customer on phone bill
+     * @param call
+     *        phone call to add
+     */
     @Override
     public void addPhoneCall(String customerName, PhoneCall call) {
         for (PhoneBill bill : bills) {
@@ -26,6 +33,12 @@ public class PhoneBillServiceImpl extends RemoteServiceServlet implements PhoneB
         bills.add(phoneBill);
     }
 
+    /**
+     * Gets a phone bill for a specific customer
+     * @param customerName
+     *        customer name on phone bill
+     * @return phone bill
+     */
     @Override
     public PhoneBill getPhoneBill(String customerName) {
         for (PhoneBill bill : bills) {
@@ -37,6 +50,16 @@ public class PhoneBillServiceImpl extends RemoteServiceServlet implements PhoneB
         return null;
     }
 
+    /**
+     * Searches all phone bills based on customer name and date/time range
+     * @param customerName
+     *        name of customer to search for
+     * @param startDateTime
+     *        start range for search
+     * @param endDateTime
+     *        end range for search
+     * @return all calls from a customer's bill between the specified date/time range
+     */
     @Override
     public PhoneBill searchPhoneBill(String customerName, Date startDateTime, Date endDateTime) {
         PhoneBill phoneBill = getPhoneBill(customerName);
@@ -56,6 +79,11 @@ public class PhoneBillServiceImpl extends RemoteServiceServlet implements PhoneB
         return billToReturn;
     }
 
+    /**
+     * Handles unexpected errors
+     * @param unhandled
+     *        Throwable object
+     */
     @Override
     protected void doUnexpectedFailure(Throwable unhandled) {
         unhandled.printStackTrace(System.err);

@@ -20,7 +20,6 @@ public class PhoneBill extends AbstractPhoneBill<PhoneCall> {
 
     /**
      * Creates a new <code>PhoneBill</code>
-     *
      * @param customerName
      *        The name of the customer that the phone bill belongs to
      */
@@ -28,16 +27,29 @@ public class PhoneBill extends AbstractPhoneBill<PhoneCall> {
         this.customerName = customerName;
     }
 
+    /**
+     * Gets customer name
+     * @return customer name
+     */
     @Override
     public String getCustomer() {
         return customerName;
     }
 
+    /**
+     * Adds a phone call to a list of calls
+     * @param call
+     *        phone call to add
+     */
     @Override
     public void addPhoneCall(PhoneCall call) {
         this.calls.add(call);
     }
 
+    /**
+     * Gets all phone calls
+     * @return phone calls
+     */
     @Override
     public Collection<PhoneCall> getPhoneCalls() {
         return this.calls;

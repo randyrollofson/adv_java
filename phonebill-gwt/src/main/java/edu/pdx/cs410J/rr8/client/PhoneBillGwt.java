@@ -52,6 +52,11 @@ public class PhoneBillGwt implements EntryPoint {
         });
     }
 
+    /**
+     * Sets up the GWT PhoneBillService class
+     * @param alerter
+     *        alert variable
+     */
     @VisibleForTesting
     PhoneBillGwt(Alerter alerter) {
         this.alerter = alerter;
@@ -60,6 +65,11 @@ public class PhoneBillGwt implements EntryPoint {
         Logger.getLogger("").setLevel(Level.INFO);  // Quiet down the default logging
     }
 
+    /**
+     * Creates alert message
+     * @param throwable
+     *        Throwable variable
+     */
     private void alertOnException(Throwable throwable) {
         Throwable unwrapped = unwrapUmbrellaException(throwable);
         StringBuilder sb = new StringBuilder();
@@ -75,6 +85,12 @@ public class PhoneBillGwt implements EntryPoint {
         this.alerter.alert(sb.toString());
     }
 
+    /**
+     * Exception wrapper
+     * @param throwable
+     *        Throwable variable
+     * @return throwable object
+     */
     private Throwable unwrapUmbrellaException(Throwable throwable) {
         if (throwable instanceof UmbrellaException) {
             UmbrellaException umbrella = (UmbrellaException) throwable;
@@ -87,6 +103,11 @@ public class PhoneBillGwt implements EntryPoint {
         return throwable;
     }
 
+    /**
+     * Adds all widgets to the root panel
+     * @param panel
+     *        vertical panel to add to
+     */
     private void addWidgets(VerticalPanel panel) {
         addPhoneCallButton = new Button("Add Phone Call");
         addPhoneCallButton.addClickHandler(new ClickHandler() {
@@ -274,7 +295,7 @@ public class PhoneBillGwt implements EntryPoint {
                 if (!isValidateStartEndTimes(fullStartDateTime, fullEndDateTime)) {
                     return;
                 }
-                
+
                 panel.remove(flexTable);
 
                 PhoneCall call = new PhoneCall(callerNumber, calleeNumber, startDateTime, endDateTime);
